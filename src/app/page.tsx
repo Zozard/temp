@@ -1,5 +1,5 @@
 "use client"
-import { GoogleLogin, useGoogleLogin, GoogleOAuthProvider } from '@react-oauth/google';
+import { GoogleLogin, GoogleOAuthProvider } from '@react-oauth/google';
 import { useState } from 'react';
 
 export default function root (){
@@ -7,9 +7,14 @@ export default function root (){
 }
 
 function Home() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [, setIsLoggedIn] = useState(false);
 
-  if (localStorage.getItem("token") !== null )
+  let token = null;
+  if (typeof window !== "undefined") {
+    token = window.localStorage.getItem("token")
+  }
+
+  if (token !== null )
   {
     return (<p>Bienvenue!</p>)
   } else {
@@ -17,9 +22,11 @@ function Home() {
           <GoogleLogin
         onSuccess={credentialResponse => {
           console.log(credentialResponse);
-          setIsLoggedIn(true);
+          setIsLoggedIn(true); // Used to re-render component
           if ( credentialResponse.credential !== undefined ) {
-            localStorage.setItem("token", credentialResponse.credential)
+            if (typeof window !== "undefined") {
+              window.localStorage.setItem("token", credentialResponse.credential)
+            }
           } 
         }}
         onError={() => {
