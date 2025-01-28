@@ -34,3 +34,20 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+## To Do List des Features 
+
+Transverse
+- Système d'authentification (SSO ?)
+    - Logout
+- Faire une barre de navigation
+
+Fonctionnel
+- Renseigner des cartes recherchées / à donner 
+- Rechercher des annonces de cartes 
+- Données de profil (code ami...)
+- Internationaliser l'appli 
+    Les propales
+    - Créer / Envoyer des propositions d'échange
+    -Accepter / Refuser des propales
+    - Confirmer que l'échange a eu lieu dans TCGP 
