@@ -35,27 +35,29 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
 
-## To Do List des Features 
+## To Do List des Features
 
 Fonctionnel
+
 - Formulaire pour poster une annonce (j'ai une carte à donner ou je recherche une carte)
 
-- Renseigner des cartes recherchées / à donner 
-- Rechercher des annonces de cartes 
+- Renseigner des cartes recherchées / à donner
+- Rechercher des annonces de cartes
 - Données de profil (code ami...)
-- Internationaliser l'appli 
-    Les propales
-    - Créer / Envoyer des propositions d'échange
+- Internationaliser l'appli
+  Les propales
+  - Créer / Envoyer des propositions d'échange
     -Accepter / Refuser des propales
-    - Confirmer que l'échange a eu lieu dans TCGP
+  - Confirmer que l'échange a eu lieu dans TCGP
 
 CSS
--Améliorer la gueule de la Navbar
--Centrer le bouton login de google 
+
+- Améliorer la gueule de la Navbar
+- Centrer le bouton login de google
 
 ## Install redis
 
-sudo apt update 
+sudo apt update
 sudo apt install redis-server
 redis-server
-redis-cli (quand le serveur tourne dans un autre terminal) 
+redis-cli (quand le serveur tourne dans un autre terminal)
