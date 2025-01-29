@@ -1,8 +1,8 @@
-"use client"
-import { GoogleLogin, googleLogout, GoogleOAuthProvider } from '@react-oauth/google';
-import { useState, useEffect } from 'react';
-import { jwtDecode } from 'jwt-decode';
-import Navbar from '@/components/Navbar';
+"use client";
+import { GoogleLogin, googleLogout, GoogleOAuthProvider } from "@react-oauth/google";
+import { useState, useEffect } from "react";
+import { jwtDecode } from "jwt-decode";
+import Navbar from "@/components/Navbar";
 
 // Interface pour typer les informations utilisateur Google
 interface GoogleUserInfo {
@@ -15,12 +15,12 @@ interface GoogleUserInfo {
   sub: string;
 }
 
-export default function root (){
+export default function root() {
   return (
-  <GoogleOAuthProvider clientId="505484307039-oo2uoi908rphpg284f683hib1ogi3nfl.apps.googleusercontent.com">
+    <GoogleOAuthProvider clientId="505484307039-oo2uoi908rphpg284f683hib1ogi3nfl.apps.googleusercontent.com">
       <Navbar />
-        <Home />
-  </GoogleOAuthProvider>
+      <Home />
+    </GoogleOAuthProvider>
   );
 }
 
@@ -30,10 +30,10 @@ function Home() {
 
   let token = null;
   if (typeof window !== "undefined") {
-    token = window.localStorage.getItem("token")
+    token = window.localStorage.getItem("token");
   }
 
-    // Si on a un token stocké au chargement de la page, on décode les infos utilisateur
+  // Si on a un token stocké au chargement de la page, on décode les infos utilisateur
   useEffect(() => {
     if (token) {
       const decoded = jwtDecode<GoogleUserInfo>(token);
@@ -41,8 +41,7 @@ function Home() {
     }
   }, [token]);
 
-
-// J'ai pas réussi à faire autrement qu'en créant une fonction handleLogout :/ 
+  // J'ai pas réussi à faire autrement qu'en créant une fonction handleLogout :/
   const handleLogout = () => {
     googleLogout();
     if (typeof window !== "undefined") {
@@ -52,34 +51,32 @@ function Home() {
     setIsLoggedIn(false);
   };
 
-  if (token !== null )
-  {
+  if (token !== null) {
     return (
-        <div>
-          <p>Bienvenue {userInfo?.given_name} {userInfo?.family_name} !</p>
-          <p>Email : {userInfo?.email}</p>
-          <button 
-            onClick={handleLogout}>
-            Se déconnecter
-          </button>
-        </div>
-  )
+      <div>
+        <p>
+          Bienvenue {userInfo?.given_name} {userInfo?.family_name} !
+        </p>
+        <p>Email : {userInfo?.email}</p>
+        <button onClick={handleLogout}>Se déconnecter</button>
+      </div>
+    );
   } else {
     return (
-          <GoogleLogin
-        onSuccess={credentialResponse => {
+      <GoogleLogin
+        onSuccess={(credentialResponse) => {
           console.log(credentialResponse);
           setIsLoggedIn(true); // Used to re-render component
-          if ( credentialResponse.credential !== undefined ) {
+          if (credentialResponse.credential !== undefined) {
             const decoded = jwtDecode<GoogleUserInfo>(credentialResponse.credential);
             setUserInfo(decoded);
             if (typeof window !== "undefined") {
-              window.localStorage.setItem("token", credentialResponse.credential)
+              window.localStorage.setItem("token", credentialResponse.credential);
             }
-          } 
+          }
         }}
         onError={() => {
-          console.log('Login Failed');
+          console.log("Login Failed");
         }}
       />
     );

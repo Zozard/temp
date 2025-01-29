@@ -50,4 +50,10 @@ Fonctionnel
     Les propales
     - Créer / Envoyer des propositions d'échange
     -Accepter / Refuser des propales
-    - Confirmer que l'échange a eu lieu dans TCGP 
+    - Confirmer que l'échange a eu lieu dans TCGP
+
+
+## Install redis
+
+sudo apt update 
+sudo apt install docker 
