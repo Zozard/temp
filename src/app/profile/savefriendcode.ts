@@ -3,7 +3,7 @@
 import { createClient } from "redis";
 
 export async function saveFriendCode(email: string, friendCode: string) {
-  const client = await createClient()
+  const client = await createClient({ url: process.env.REDIS_URL })
     .on("error", (err) => console.log("Redis Client Error", err))
     .connect();
 
@@ -12,7 +12,7 @@ export async function saveFriendCode(email: string, friendCode: string) {
 }
 
 export async function loadFriendCode(email: string): Promise<string | null> {
-  const client = await createClient()
+  const client = await createClient({ url: process.env.REDIS_URL })
     .on("error", (err) => console.log("Redis Client Error", err))
     .connect();
 
