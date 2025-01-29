@@ -37,12 +37,9 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 
 ## To Do List des Features 
 
-Transverse
-- Système d'authentification (SSO ?)
-    - Logout
-- Faire une barre de navigation
-
 Fonctionnel
+- Formulaire pour poster une annonce (j'ai une carte à donner ou je recherche une carte)
+
 - Renseigner des cartes recherchées / à donner 
 - Rechercher des annonces de cartes 
 - Données de profil (code ami...)
@@ -52,8 +49,13 @@ Fonctionnel
     -Accepter / Refuser des propales
     - Confirmer que l'échange a eu lieu dans TCGP
 
+CSS
+-Améliorer la gueule de la Navbar
+-Centrer le bouton login de google 
 
 ## Install redis
 
 sudo apt update 
-sudo apt install docker 
+sudo apt install redis-server
+redis-server
+redis-cli (quand le serveur tourne dans un autre terminal) 
