@@ -1,30 +1,15 @@
 // components/Navbar.tsx
-import Link from "next/link";
+import React from 'react';
+import './Navbar.css';
 
 const Navbar = () => {
   return (
-    <nav>
-      <table>
-        <tbody>
-          <tr>
-            <td>
-              <Link href="/">
-                <button>Home</button>
-              </Link>
-            </td>
-            <td>
-              <Link href="/profile">
-                <button>Profil</button>
-              </Link>
-            </td>
-            <td>
-              <Link href="/market">
-                <button>Market</button>
-              </Link>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+    <nav className="custom-navbar">
+      <div className="navbar-container">
+        <a href="/" className="nav-link">Home</a>
+        <a href="/profile" className="nav-link">Profil</a>
+        <a href="/market" className="nav-link">Market</a>
+      </div>
     </nav>
   );
 };

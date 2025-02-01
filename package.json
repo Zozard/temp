@@ -15,7 +15,8 @@
     "node-redis": "^0.1.7",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "redis": "^4.7.0"
+    "redis": "^4.7.0",
+    "uuid": "^11.0.5"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

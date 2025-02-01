@@ -63,6 +63,7 @@ function Home() {
     );
   } else {
     return (
+      <div class='google-login-container'>
       <GoogleLogin
         onSuccess={(credentialResponse) => {
           console.log(credentialResponse);
@@ -79,6 +80,7 @@ function Home() {
           console.log("Login Failed");
         }}
       />
+      </div>
     );
   }
 }

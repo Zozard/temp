@@ -10,14 +10,13 @@ export default function ProfilePage() {
   useEffect(() => {
     const friendCodePromise = loadFriendCode("g.zozine@gmail.com");
     friendCodePromise.then((x) => {
-      if (x !== null)
-        {
-          setFriendCode(x)
-        }
+      if (x !== null) {
+        setFriendCode(x);
+      }
     });
-  }, [])
-  
+  }, []);
 
+  
   return (
     <div>
       <div>
