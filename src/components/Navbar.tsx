@@ -1,14 +1,15 @@
 // components/Navbar.tsx
 import React from 'react';
 import './Navbar.css';
+import Link from 'next/link';
 
 const Navbar = () => {
   return (
     <nav className="custom-navbar">
       <div className="navbar-container">
-        <a href="/" className="nav-link">Home</a>
-        <a href="/profile" className="nav-link">Profil</a>
-        <a href="/market" className="nav-link">Market</a>
+        <Link href="/" className="nav-link">Home</Link>
+        <Link href="/profile" className="nav-link">Profil</Link>
+        <Link href="/market" className="nav-link">Market</Link>
       </div>
     </nav>
   );

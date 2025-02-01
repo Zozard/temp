@@ -40,7 +40,7 @@ export default function MarketPage() {
       {/* afficher toutes les cartes à donner */
         allCardsToGive.map(card => {
           return (
-            <p> {card}</p>
+            <p key={card}>{card}</p>
           )
         })
       }
