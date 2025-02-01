@@ -63,7 +63,7 @@ function Home() {
     );
   } else {
     return (
-      <div class='google-login-container'>
+      <div className='google-login-container'>
       <GoogleLogin
         onSuccess={(credentialResponse) => {
           console.log(credentialResponse);
