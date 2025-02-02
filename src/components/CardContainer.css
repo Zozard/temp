@@ -1,0 +1,40 @@
+/* CardContainer.css */
+.card-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1rem;
+    padding: 1rem;
+    max-height: 90vh; /* Limite la hauteur à 90% de la hauteur de la fenêtre */
+    overflow-y: auto; /* Ajoute un scroll vertical si nécessaire */
+    width: 100%;
+    box-sizing: border-box;
+    background: #3d2c59;
+    border-radius: 2.5em;
+  }
+  
+  .card-container-title{
+    font-weight: bold;
+    color: white;
+    size: big;
+  }
+
+
+
+  /* Pour une scrollbar plus jolie (optionnel) */
+  .card-container::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  .card-container::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+  }
+  
+  .card-container::-webkit-scrollbar-thumb {
+    background: #bc00eb59;
+    border-radius: 4px;
+  }
+  
+  .card-container::-webkit-scrollbar-thumb:hover {
+    background: #bc00eb80;
+  }

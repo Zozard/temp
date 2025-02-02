@@ -46,3 +46,29 @@ a {
   justify-content: center;
   align-items: center;
 }
+
+.title-box {
+  font-family: 'Helvetica', sans-serif;
+  font-size: 2.2em;
+  color: #5f6368;
+  text-align: center;
+  padding: 12px 25px;
+  margin: 20px auto;
+  background-color: #fff;
+  border: 3px solid #70a1ff;
+  border-radius: 12px;
+  box-shadow: 
+    3px 3px 0px #70a1ff,
+    -1px -1px 12px rgba(112, 161, 255, 0.1);
+  display: block;  /* Changé de inline-block à block */
+  width: fit-content;  /* Pour que la boîte s'adapte au contenu */
+  margin-left: auto;  /* Ces deux margin auto */
+  margin-right: auto; /* centrent horizontalement */
+}
+
+/* Pour le retour à la ligne après */
+.title-box::after {
+  content: '';
+  display: block;
+  margin-bottom: 20px; /* Ajustez cette valeur selon l'espace désiré */
+}

@@ -25,3 +25,16 @@ export async function loadAllCardsToGive(): Promise<string[]> {
 
   return cards.filter((x) => x !== null);
 }
+
+
+export async function loadAllCardsSearched(): Promise<string[]> {
+  const client = await createClient({ url: process.env.REDIS_URL })
+    .on("error", (err) => console.log("Redis Client Error", err))
+    .connect();
+
+  const keys = await client.keys("cardSearched*");
+
+  const cards = await client.mGet(keys);
+
+  return cards.filter((x) => x !== null);
+}
