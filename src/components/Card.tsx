@@ -4,7 +4,7 @@ import "./Card.css";
 interface Card {
     date: ReactNode;
     title: ReactNode;
-    children: ReactNode;
+    children?: React.ReactNode; // <- "?" le rend optionnel
   }
 
 const Card: React.FC <Card> = (props) => {

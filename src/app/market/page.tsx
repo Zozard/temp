@@ -54,11 +54,11 @@ export default function MarketPage() {
           <>
           <CardContainer title={"Cartes à donner"}>
             {allCardsToGive.map((card, index) => (
-              <Card key={index} title={card} date="02-02-2025" children={undefined} />
+              <Card key={index} title={card} date="02-02-2025"/>
             ))}
           </CardContainer><CardContainer title={"Cartes à échanger" }>
             {allCardsSearched.map((card, index) => (
-              <Card key={index} title={card} date="02-02-2025" children={undefined}/>
+              <Card key={index} title={card} date="02-02-2025"/>
             ))}
           </CardContainer></>
       }
