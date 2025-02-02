@@ -56,7 +56,7 @@ export default function MarketPage() {
             {allCardsToGive.map((card, index) => (
               <Card key={index} title={card} date="02-02-2025"/>
             ))}
-          </CardContainer><CardContainer title={"Cartes à échanger" }>
+          </CardContainer><CardContainer title={"Cartes recherchées" }>
             {allCardsSearched.map((card, index) => (
               <Card key={index} title={card} date="02-02-2025"/>
             ))}
