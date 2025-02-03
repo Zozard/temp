@@ -4,10 +4,11 @@ import Card from "@/components/Card";
 import Navbar from "@/components/Navbar";
 import CardContainer from "@/components/CardContainer";
 import { useEffect, useState } from "react";
-import { loadAllCardsToGive, saveCardToGive, loadAllCardsSearched } from "./saveprops";
+import { loadAllCardsToGive, saveCardToGive, loadAllCardsSearched, saveCardSearched } from "./saveprops";
 
 export default function MarketPage() {
   const [cardToGive, setCardToGive] = useState("");
+  const [cardSearched, setCardSearched] = useState("");
   const [allCardsToGive, setAllCardsToGive] = useState<string[]>([]);
   const [allCardsSearched, setAllCardsSearched] = useState<string[]>([]);
 
@@ -29,9 +30,18 @@ export default function MarketPage() {
     });
   }, []);
 
-  function submitCard() {
-    saveCardToGive("g.zozine@gmail.com", cardToGive);
-    setAllCardsToGive([...allCardsToGive, cardToGive]);
+  function submitCardToGive() {
+    if (cardToGive !== "") {
+      saveCardToGive("g.zozine@gmail.com", cardToGive);
+      setAllCardsToGive([...allCardsToGive, cardToGive]);
+    }
+  }
+
+  function submitCardSearched() {
+    if (cardSearched !== "") {
+      saveCardSearched("g.zozine@gmail.com", cardSearched);
+      setAllCardsSearched([...allCardsSearched, cardSearched]);
+    }
   }
 
   return (
@@ -41,26 +51,45 @@ export default function MarketPage() {
       </div>
       <h1 className="title-box title-animated">Market</h1>
       {/* Contenu de la page market */}
-      <label>Carte à donner : </label>
-      <input
-        type="text"
-        name="cardToGive"
-        onChange={(event) => setCardToGive(event.target.value)}
-      />
-      <button onClick={() => submitCard()}>Save</button>
+      <div className="form-container">
+        <label>Carte à donner : </label>
+        <input
+          type="text"
+          name="cardToGive"
+          onChange={(event) => setCardToGive(event.target.value)}
+        />
+        <button onClick={() => submitCardToGive()}>Save</button>
+      </div>
       {
         /* afficher toutes les cartes à donner */
 
-          <>
+        <>
           <CardContainer title={"Cartes à donner"}>
             {allCardsToGive.map((card, index) => (
-              <Card key={index} title={card} date="02-02-2025"/>
+              <Card key={index} title={card} date="02-02-2025" owner="Jean-Zoz" />
             ))}
-          </CardContainer><CardContainer title={"Cartes recherchées" }>
+          </CardContainer>
+        </>
+      }
+      <div className="form-container">
+        <label>Carte recherchée : </label>
+        <input
+          type="text"
+          name="cardSearched"
+          onChange={(event) => setCardSearched(event.target.value)}
+        />
+        <button onClick={() => submitCardSearched()}>Save</button>
+      </div>
+      {
+        /* afficher toutes les cartes recherchées */
+
+        <>
+          <CardContainer title={"Cartes recherchées"}>
             {allCardsSearched.map((card, index) => (
-              <Card key={index} title={card} date="02-02-2025"/>
+              <Card key={index} title={card} date="02-02-2025" owner="Jean-Samy" />
             ))}
-          </CardContainer></>
+          </CardContainer>
+        </>
       }
     </div>
   );

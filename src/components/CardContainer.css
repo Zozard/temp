@@ -10,6 +10,7 @@
     box-sizing: border-box;
     background: #3d2c59;
     border-radius: 2.5em;
+    margin: 1em;
   }
   
   .card-container-title{

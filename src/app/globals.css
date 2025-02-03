@@ -72,3 +72,63 @@ a {
   display: block;
   margin-bottom: 20px; /* Ajustez cette valeur selon l'espace désiré */
 }
+
+/* Conteneur du formulaire */
+.form-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    max-width: 300px;
+    margin: auto;
+    font-family: Arial, sans-serif;
+}
+
+/* Style du label */
+.form-container label {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: #333;
+}
+
+/* Style de l'input */
+.form-container input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 1em;
+    transition: border 0.3s ease;
+}
+
+.form-container input:focus {
+    border-color: #6200ea;
+    outline: none;
+    box-shadow: 0 0 5px rgba(98, 0, 234, 0.3);
+}
+
+/* Style général du bouton */
+button {
+  padding: 12px 20px;
+  font-size: 1.1em;
+  font-weight: bold;
+  background: #6200ea;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+  display: inline-block;
+  text-align: center;
+}
+
+/* Effet au survol */
+button:hover {
+  background: #4b00c4;
+}
+
+/* Effet au clic */
+button:active {
+  transform: scale(0.95);
+}
+
