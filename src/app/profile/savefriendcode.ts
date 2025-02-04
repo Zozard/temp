@@ -20,3 +20,6 @@ export async function loadFriendCode(email: string): Promise<string | null> {
 
   return value;
 }
+
+
+

@@ -55,9 +55,9 @@ CSS
 - Améliorer la gueule de la Navbar
 - Centrer le bouton login de google
 
-## Install redis
 
-sudo apt update
-sudo apt install redis-server
-redis-server
-redis-cli (quand le serveur tourne dans un autre terminal)
+## Commande SQL pour insérer une nouvelle carte 
+
+```sql
+INSERT INTO cards (card_id, pokemon_name, rarity) values ('A1-223', 'Giovanni', '⬧⬧');
+```

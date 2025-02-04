@@ -5,12 +5,14 @@ import Navbar from "@/components/Navbar";
 import CardContainer from "@/components/CardContainer";
 import { useEffect, useState } from "react";
 import { loadAllCardsToGive, saveCardToGive, loadAllCardsSearched, saveCardSearched } from "./saveprops";
+import { useUser } from "../useUser";
 
 export default function MarketPage() {
   const [cardToGive, setCardToGive] = useState("");
   const [cardSearched, setCardSearched] = useState("");
   const [allCardsToGive, setAllCardsToGive] = useState<string[]>([]);
   const [allCardsSearched, setAllCardsSearched] = useState<string[]>([]);
+  const user = useUser();
 
   useEffect(() => {
     const allCardsToGivePromise = loadAllCardsToGive();
@@ -31,15 +33,15 @@ export default function MarketPage() {
   }, []);
 
   function submitCardToGive() {
-    if (cardToGive !== "") {
-      saveCardToGive("g.zozine@gmail.com", cardToGive);
+    if (cardToGive !== "" && user !== null) {
+      saveCardToGive(user.email, cardToGive);
       setAllCardsToGive([...allCardsToGive, cardToGive]);
     }
   }
 
   function submitCardSearched() {
-    if (cardSearched !== "") {
-      saveCardSearched("g.zozine@gmail.com", cardSearched);
+    if (cardSearched !== "" && user !== null) {
+      saveCardSearched(user.email, cardSearched);
       setAllCardsSearched([...allCardsSearched, cardSearched]);
     }
   }
