@@ -17,11 +17,16 @@ interface GoogleUserInfo {
 export function useUser() {
   const [token, setToken] = useState<string | null>(null);
 
+  const callback = () => {
+    const token = window.localStorage.getItem("token");
+    setToken(token);
+  };
+
   useEffect(() => {
-    const callback = () => {
-      const token = window.localStorage.getItem("token");
-      setToken(token);
-    };
+    callback();
+  }, []);
+
+  useEffect(() => {
     window.addEventListener("storage", callback);
 
     return () => {

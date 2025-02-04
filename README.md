@@ -60,4 +60,5 @@ CSS
 
 ```sql
 INSERT INTO cards (card_id, pokemon_name, rarity) values ('A1-223', 'Giovanni', '⬧⬧');
+INSERT INTO users (email) values ('<email>');
 ```
