@@ -35,3 +35,6 @@ CREATE TABLE user_cards
 -- à venir 
 -- les modifs sur les tables sont à faire avec des alter table 
 -- (au sein de transactions dans l'idéal) 
+
+-- 11/02-2025
+ALTER TABLE cards RENAME COLUMN pokemon_name TO card_name;

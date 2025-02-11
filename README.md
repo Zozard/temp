@@ -59,6 +59,6 @@ CSS
 ## Commande SQL pour insérer une nouvelle carte 
 
 ```sql
-INSERT INTO cards (card_id, pokemon_name, rarity) values ('A1-223', 'Giovanni', '⬧⬧');
+INSERT INTO cards (card_id, card_name, rarity) values ('A1-223', 'Giovanni', '⬧⬧');
 INSERT INTO users (email) values ('<email>');
 ```
