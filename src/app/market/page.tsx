@@ -4,13 +4,19 @@ import Card from "@/components/Card";
 import Navbar from "@/components/Navbar";
 import CardContainer from "@/components/CardContainer";
 import { useEffect, useState } from "react";
-import { loadAllCardsToGive, saveCardToGive, loadAllCardsSearched, saveCardSearched } from "./saveprops";
+import {
+  loadAllCardsToGive,
+  saveCardToGive,
+  loadAllCardsSearched,
+  saveCardSearched,
+  loadUserCard,
+} from "./saveprops";
 import { useUser } from "../useUser";
 
 export default function MarketPage() {
   const [cardToGive, setCardToGive] = useState("");
   const [cardSearched, setCardSearched] = useState("");
-  const [allCardsToGive, setAllCardsToGive] = useState<string[]>([]);
+  const [allCardsToGive, setAllCardsToGive] = useState<{ card_name: string; pseudo: string }[]>([]);
   const [allCardsSearched, setAllCardsSearched] = useState<string[]>([]);
   const user = useUser();
 
@@ -32,10 +38,12 @@ export default function MarketPage() {
     });
   }, []);
 
-  function submitCardToGive() {
+  async function submitCardToGive() {
     if (cardToGive !== "" && user !== null) {
-      saveCardToGive(user.email, cardToGive);
-      setAllCardsToGive([...allCardsToGive, cardToGive]);
+      const cardInserted = await saveCardToGive(user.email, cardToGive);
+      const dbReturn = await loadUserCard(cardInserted);
+      // setAllCardsToGive([...allCardsToGive, { card_name: cardToGive, pseudo: "josé" }]);
+      setAllCardsToGive([...allCardsToGive, { card_name: dbReturn[0].card_name, pseudo: dbReturn[0].pseudo }]);
     }
   }
 
@@ -68,7 +76,7 @@ export default function MarketPage() {
         <>
           <CardContainer title={"Cartes à donner"}>
             {allCardsToGive.map((card, index) => (
-              <Card key={index} title={card} date="02-02-2025" owner="Jean-Zoz" />
+              <Card key={index} title={card.card_name} date="02-02-2025" owner={card.pseudo} />
             ))}
           </CardContainer>
         </>

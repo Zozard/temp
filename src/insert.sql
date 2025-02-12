@@ -13,4 +13,17 @@ EXCEPTION
 END $$;
 
 
--- 
+-- Île fabuleuse
+
+DO $$
+BEGIN
+    -- Insertion des valeurs
+    INSERT INTO cards (card_id, card_name, rarity) VALUES 
+    ('A1a-001','Noeunoeuf','⬧'),('A1a-002','Noadkoko','⬧⬧'),('A1a-003','Celebi ex','⬧⬧⬧⬧'),('A1a-004','Vipélierre','⬧'),('A1a-005','Lianaja','⬧⬧'),('A1a-006','Majaspic','⬧⬧⬧'),('A1a-007','Spododo','⬧'),('A1a-008','Lampignon','⬧⬧'),('A1a-009','Sinistrail','⬧⬧'),('A1a-010','Ponyta','⬧'),('A1a-011','Galopa','⬧⬧'),('A1a-012','Magmar','⬧⬧'),('A1a-013','Pyronille','⬧'),('A1a-014','Pyrax','⬧⬧⬧'),('A1a-015','Tritox','⬧'),('A1a-016','Malamandre','⬧'),('A1a-017','Magicarpe','⬧'),('A1a-018','Léviator ex','⬧⬧⬧⬧'),('A1a-019','Aquali','⬧⬧⬧'),('A1a-020','Écayon','⬧'),('A1a-021','Luminéon','⬧⬧'),('A1a-022','Khélocrok','⬧'),('A1a-023','Torgamord','⬧⬧'),('A1a-024','Nigosier','⬧'),('A1a-025','Pikachu','⬧'),('A1a-026','Raichu','⬧⬧⬧'),('A1a-027','Élektek','⬧⬧'),('A1a-028','Statitik','⬧'),('A1a-029','Mygavolt','⬧⬧'),('A1a-030','Dedenne','⬧'),('A1a-031','Mew','⬧⬧⬧'),('A1a-032','Mew ex','⬧⬧⬧⬧'),('A1a-033','Cryptéro','⬧⬧'),('A1a-034','Lewsor','⬧'),('A1a-035','Neitram','⬧⬧'),('A1a-036','Flabébé','⬧'),('A1a-037','Floette','⬧'),('A1a-038','Florges','⬧⬧'),('A1a-039','Sucroquin','⬧'),('A1a-040','Cupcanaille','⬧'),('A1a-041','Férosinge','⬧'),('A1a-042','Colossinge','⬧'),('A1a-043','Racaillou','⬧'),('A1a-044','Gravalanch','⬧⬧'),('A1a-045','Grolem','⬧⬧⬧'),('A1a-046','Ptéra ex','⬧⬧⬧⬧'),('A1a-047','Marshadow','⬧⬧⬧'),('A1a-048','Dolman','⬧⬧'),('A1a-049','Smogo','⬧'),('A1a-050','Smogogo','⬧⬧'),('A1a-051','Chacripan','⬧'),('A1a-052','Léopardus','⬧'),('A1a-053','Venipatte','⬧'),('A1a-054','Scobolide','⬧'),('A1a-055','Brutapode','⬧⬧'),('A1a-056','Drakkarmin','⬧⬧'),('A1a-057','Roucool','⬧'),('A1a-058','Roucoups','⬧'),('A1a-059','Roucarnage ex','⬧⬧⬧⬧'),('A1a-060','Tauros','⬧⬧⬧'),('A1a-061','Évoli','⬧'),('A1a-062','Pijako','⬧'),('A1a-063','Vieil Ambre','⬧'),('A1a-064','Flûte Pokémon','⬧⬧'),('A1a-065','Dalle Fabuleuse','⬧⬧'),('A1a-066','Jeune Explorateur','⬧⬧'),('A1a-067','Blue','⬧⬧'),('A1a-068','Leaf','⬧⬧'),('A1a-069','Noadkoko','★'),('A1a-070','Majaspic','★'),('A1a-071','Tritox','★'),('A1a-072','Aquali','★'),('A1a-073','Dedenne','★'),('A1a-074','Marshadow','★'),('A1a-075','Celebi ex','★★'),('A1a-076','Léviator ex','★★'),('A1a-077','Mew ex','★★'),('A1a-078','Ptéra ex','★★'),('A1a-079','Roucarnage ex','★★'),('A1a-080','Jeune Explorateur','★★'),('A1a-081','Blue','★★'),('A1a-082','Leaf','★★'),('A1a-083','Mew ex','★★'),('A1a-084','Ptéra ex','★★'),('A1a-085','Celebi ex','★★★'),('A1a-086','Mew ex','👑');
+
+EXCEPTION
+    WHEN others THEN
+        -- En cas d'erreur, afficher un message et annuler les modifications
+        RAISE EXCEPTION 'Une erreur est survenue : %', SQLERRM;
+END $$;
+
