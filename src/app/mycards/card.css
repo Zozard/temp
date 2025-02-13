@@ -1,0 +1,22 @@
+.card-container{
+    display: grid;
+    margin: 20px;
+    grid-template-columns: repeat(auto-fit, minmax(300px, auto));
+    gap: 20px;
+    justify-content: center;
+}
+
+.card {
+    width: 300px;
+    transition: transform 0.25s ease;
+    cursor: pointer;
+}
+
+.card:hover{
+    transform: scale(0.97);
+}
+
+img {
+    width: 100%;
+
+}

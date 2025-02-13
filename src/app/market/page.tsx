@@ -1,7 +1,6 @@
 "use client";
 
 import Card from "@/components/Card";
-import Navbar from "@/components/Navbar";
 import CardContainer from "@/components/CardContainer";
 import { useEffect, useState } from "react";
 import {
@@ -42,8 +41,10 @@ export default function MarketPage() {
     if (cardToGive !== "" && user !== null) {
       const cardInserted = await saveCardToGive(user.email, cardToGive);
       const dbReturn = await loadUserCard(cardInserted);
-      // setAllCardsToGive([...allCardsToGive, { card_name: cardToGive, pseudo: "josé" }]);
-      setAllCardsToGive([...allCardsToGive, { card_name: dbReturn[0].card_name, pseudo: dbReturn[0].pseudo }]);
+      setAllCardsToGive([
+        ...allCardsToGive,
+        { card_name: dbReturn[0].card_name, pseudo: dbReturn[0].pseudo },
+      ]);
     }
   }
 
@@ -56,9 +57,6 @@ export default function MarketPage() {
 
   return (
     <div>
-      <div>
-        <Navbar />
-      </div>
       <h1 className="title-box title-animated">Market</h1>
       {/* Contenu de la page market */}
       <div className="form-container">

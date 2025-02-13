@@ -1,6 +1,5 @@
 "use client";
 
-import Navbar from "@/components/Navbar";
 import { saveFriendCode, loadFriendCode } from "./savefriendcode";
 import { useEffect, useState } from "react";
 
@@ -16,12 +15,8 @@ export default function ProfilePage() {
     });
   }, []);
 
-  
   return (
     <div>
-      <div>
-        <Navbar />
-      </div>
       <h1>Profile</h1>
       {/* Contenu de la page profil */}
       <label>Mon code ami</label>

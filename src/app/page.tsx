@@ -18,7 +18,6 @@ interface GoogleUserInfo {
 export default function root() {
   return (
     <GoogleOAuthProvider clientId="505484307039-oo2uoi908rphpg284f683hib1ogi3nfl.apps.googleusercontent.com">
-      <Navbar />
       <Home />
     </GoogleOAuthProvider>
   );
