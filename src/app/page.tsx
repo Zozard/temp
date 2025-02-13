@@ -2,7 +2,6 @@
 import { GoogleLogin, googleLogout, GoogleOAuthProvider } from "@react-oauth/google";
 import { useState, useEffect } from "react";
 import { jwtDecode } from "jwt-decode";
-import Navbar from "@/components/Navbar";
 
 // Interface pour typer les informations utilisateur Google
 interface GoogleUserInfo {

@@ -41,10 +41,9 @@ function Card(props: CardProps) {
   // A1-113
 
   const [rawCardExtension, rawCardNumber] = cardId.split("-");
-  
+
   const cardNumber = rawCardNumber.replaceAll("0", "");
   const cardExtension = extensionToUrl[rawCardExtension];
-
 
   return (
     <img
