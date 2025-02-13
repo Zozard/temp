@@ -19,7 +19,7 @@ export default function MyCardsPage() {
       {allCards.map((card) => (
         <div key={card.card_id} className="card">
           {card.card_name}
-          <Card cardId={card.card_id}></Card>
+          <CardDisplay cardId={card.card_id}></CardDisplay>
         </div>
       ))}
     </div>
@@ -35,7 +35,7 @@ const extensionToUrl: Record<string, string> = {
   A1a: "l-ile-fabuleuse",
 };
 
-function Card(props: CardProps) {
+function CardDisplay(props: CardProps) {
   const { cardId } = props;
 
   // A1-113
