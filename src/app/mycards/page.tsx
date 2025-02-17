@@ -53,11 +53,16 @@ const extensionToUrl: Record<string, string> = {
 function CardDisplay(props: CardProps) {
   const { cardId } = props;
 
-  // A1-113
+  const trimLeftZeros = (str: string) => {
+    while (str.startsWith('0')) {
+      str = str.substring(1);
+    }
+    return str;
+  };
 
   const [rawCardExtension, rawCardNumber] = cardId.split("-");
 
-  const cardNumber = rawCardNumber.replaceAll("0", "");
+  const cardNumber = trimLeftZeros(rawCardNumber);
   const cardExtension = extensionToUrl[rawCardExtension];
 
   return (
