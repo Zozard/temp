@@ -1,28 +1,43 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Card, loadAllCards } from "./mycards";
+import { Card, loadAllCards, loadMyCards } from "./mycards";
 import "./card.css";
+import { useUser } from "../useUser";
 
 export default function MyCardsPage() {
   const [allCards, setAllCards] = useState<Card[]>([]);
+  // toggle links for restricting which cards we display : all cards or just my cards to sell / to give
+  const [cardSet, setCardSet] = useState("allCards");
+  const user = useUser();
 
   useEffect(() => {
-    const allCardsPromise = loadAllCards();
+    const allCardsPromise: Promise<Card[]> =
+      cardSet === "allCards" ? loadAllCards() : loadMyCards(user!.email);
     allCardsPromise.then((cards) => {
       setAllCards(cards);
+      console.log(cards);
     });
-  }, []);
+  }, [cardSet]);
 
   return (
-    <div className="card-container">
-      {allCards.map((card) => (
-        <div key={card.card_id} className="card">
-          {card.card_name}
-          <CardDisplay cardId={card.card_id}></CardDisplay>
-        </div>
-      ))}
-    </div>
+    <>
+      <div className="cardSetSelector">
+        <button className="toggle-button-cardSet" onClick={() => setCardSet("allCards")}>
+          All cards
+        </button>
+        <button className="toggle-button-cardSet" onClick={() => setCardSet("myCards")}>
+          My Cards
+        </button>
+      </div>
+      <div className="card-container">
+        {allCards.map((card) => (
+          <div key={card.card_id} className="card">
+            <CardDisplay cardId={card.card_id}></CardDisplay>
+          </div>
+        ))}
+      </div>
+    </>
   );
 }
 

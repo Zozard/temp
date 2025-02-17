@@ -20,3 +20,13 @@ img {
     width: 100%;
 
 }
+
+.cardSetSelector {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+}
+.toggle-button-cardSet {
+    margin: 20px;
+}
+
