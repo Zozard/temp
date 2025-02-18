@@ -61,7 +61,7 @@ type CardProps = {
   onCardClick: () => void; // Ajout d'un gestionnaire de clic
 };
 
-function CardDisplay({ cardId, cardName, onCardClick }: CardProps) {
+function CardDisplay({ cardId, onCardClick }: CardProps) {
   const trimLeftZeros = (str: string) => {
     while (str.startsWith("0")) {
       str = str.substring(1);
