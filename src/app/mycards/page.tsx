@@ -4,11 +4,13 @@ import { useEffect, useState } from "react";
 import { Card, loadAllCards, loadMyCards } from "./mycards";
 import "./card.css";
 import { useUser } from "../useUser";
+import { Modal } from "./Modal";
 
 export default function MyCardsPage() {
   const [allCards, setAllCards] = useState<Card[]>([]);
   // toggle links for restricting which cards we display : all cards or just my cards to sell / to give
   const [cardSet, setCardSet] = useState("allCards");
+  const [selectedCard, setSelectedCard] = useState<Card | null>(null);
   const user = useUser();
 
   useEffect(() => {
@@ -33,35 +35,41 @@ export default function MyCardsPage() {
       <div className="card-container">
         {allCards.map((card) => (
           <div key={card.card_id} className="card">
-            <CardDisplay cardId={card.card_id}></CardDisplay>
+            <CardDisplay
+              cardId={card.card_id}
+              cardName={card.card_name}
+              onCardClick={() => setSelectedCard(card)}
+            ></CardDisplay>
           </div>
         ))}
       </div>
+      <Modal isOpen={selectedCard !== null} onClose={() => setSelectedCard(null)}>
+        {selectedCard && <h2>{selectedCard.card_name}</h2>}
+      </Modal>
     </>
   );
 }
-
-type CardProps = {
-  cardId: string;
-};
 
 const extensionToUrl: Record<string, string> = {
   A1: "puissance-genetique",
   A1a: "l-ile-fabuleuse",
 };
 
-function CardDisplay(props: CardProps) {
-  const { cardId } = props;
+type CardProps = {
+  cardId: string;
+  cardName: string; // Ajout du nom de la carte
+  onCardClick: () => void; // Ajout d'un gestionnaire de clic
+};
 
+function CardDisplay({ cardId, cardName, onCardClick }: CardProps) {
   const trimLeftZeros = (str: string) => {
-    while (str.startsWith('0')) {
+    while (str.startsWith("0")) {
       str = str.substring(1);
     }
     return str;
   };
 
   const [rawCardExtension, rawCardNumber] = cardId.split("-");
-
   const cardNumber = trimLeftZeros(rawCardNumber);
   const cardExtension = extensionToUrl[rawCardExtension];
 
@@ -69,6 +77,7 @@ function CardDisplay(props: CardProps) {
     <img
       loading="lazy"
       src={`https://www.media.pokekalos.fr/img/jeux/pocket/extensions/${cardExtension}/${cardNumber}.png`}
+      onClick={onCardClick}
     />
   );
 }
