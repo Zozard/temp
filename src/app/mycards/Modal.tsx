@@ -9,15 +9,14 @@ type ModalProps = {
   onSave: (quantity: number) => Promise<void>;
 };
 
-
-// mettre à jour pour avoir un 2e input 
+// mettre à jour pour avoir un 2e input
 export function Modal({ onClose, card, quantity, onSave }: ModalProps) {
+  const [inputQuantity, setInputQuantity] = useState(quantity);
+  const [isLoading, setIsLoading] = useState(false);
+
   if (card === null) {
     return null;
   }
-
-  const [inputQuantity, setInputQuantity] = useState(quantity);
-  const [isLoading, setIsLoading] = useState(false);
 
   const internalSave = async () => {
     setIsLoading(true);
