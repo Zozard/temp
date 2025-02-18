@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Card, loadAllCards, loadMyCards } from "./mycards";
+import { Card, loadAllCards, loadMyCards, loadUserCardQuantity } from "./mycards";
 import "./card.css";
 import { useUser } from "../useUser";
 import { Modal } from "./Modal";
@@ -11,8 +11,24 @@ export default function MyCardsPage() {
   // toggle links for restricting which cards we display : all cards or just my cards to sell / to give
   const [cardSet, setCardSet] = useState("allCards");
   const [selectedCard, setSelectedCard] = useState<Card | null>(null);
+  // État pour stocker la quantité lors de l'ouverture de la modale
+  const [quantity, setQuantity] = useState<number>(0);
   const user = useUser();
 
+  // Effet qui se déclenche quand une carte est sélectionnée
+  useEffect(() => {
+    // Si une carte est sélectionnée, on charge sa quantité
+    async function fetchQuantity() {
+      if (selectedCard && user!.email) {
+        const result= await loadUserCardQuantity(user!.email,selectedCard.card_id);
+        setQuantity(result);
+      }
+    }
+
+    fetchQuantity();
+  }, [selectedCard]); // L'effet se relance si selectedCard change
+
+  // Effet pour filtrer les cartes affichées (se déclenche quand on clique sur les boutons en haut)
   useEffect(() => {
     const allCardsPromise: Promise<Card[]> =
       cardSet === "allCards" ? loadAllCards() : loadMyCards(user!.email);
@@ -37,15 +53,18 @@ export default function MyCardsPage() {
           <div key={card.card_id} className="card">
             <CardDisplay
               cardId={card.card_id}
-              cardName={card.card_name}
               onCardClick={() => setSelectedCard(card)}
             ></CardDisplay>
           </div>
         ))}
       </div>
-      <Modal isOpen={selectedCard !== null} onClose={() => setSelectedCard(null)}>
+      <Modal
+        isOpen={selectedCard !== null}
+        onClose={() => setSelectedCard(null)}
+        cardName={selectedCard?.card_name ?? ""}
+        quantity={quantity}
+      />
         {selectedCard && <h2>{selectedCard.card_name}</h2>}
-      </Modal>
     </>
   );
 }
@@ -57,7 +76,6 @@ const extensionToUrl: Record<string, string> = {
 
 type CardProps = {
   cardId: string;
-  cardName: string; // Ajout du nom de la carte
   onCardClick: () => void; // Ajout d'un gestionnaire de clic
 };
 

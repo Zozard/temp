@@ -1,10 +1,11 @@
 type ModalProps = {
   isOpen: boolean;
   onClose: () => void;
-  children: React.ReactNode;
+  cardName: string;
+  quantity: number;
 };
 
-export function Modal({ isOpen, onClose, children }: ModalProps) {
+export function Modal({ isOpen, onClose, cardName, quantity }: ModalProps) {
   if (!isOpen) return null;
 
   return (
@@ -33,7 +34,8 @@ export function Modal({ isOpen, onClose, children }: ModalProps) {
         }}
         onClick={(e) => e.stopPropagation()}
       >
-        {children}
+        <h2 style={{ marginTop: 0 }}>{cardName}</h2>
+        <p>Quantité : {quantity}</p>{" "}
       </div>
     </div>
   );
