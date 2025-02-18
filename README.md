@@ -55,8 +55,15 @@ CSS
 - Améliorer la gueule de la Navbar
 - Centrer le bouton login de google
 
+### 2025-02-18
 
-## Commande SQL pour insérer une nouvelle carte 
+- Faire un layout un peu sympa pour le modal (+ tout style souhaité [optionnel])
+- Faire un second input
+- Sauvegarder l'état en backend
+- Lire/regarder théorie sur React
+  https://grafikart.fr/formations/react
+
+## Commande SQL pour insérer une nouvelle carte
 
 ```sql
 INSERT INTO cards (card_id, card_name, rarity) values ('A1-223', 'Giovanni', '⬧⬧');

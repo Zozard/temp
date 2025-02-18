@@ -44,3 +44,5 @@ export async function loadUserCardQuantity(email: string, card_id: string) {
 
   return res.rows[0].quantity;
 }
+
+

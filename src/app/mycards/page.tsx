@@ -5,6 +5,7 @@ import { Card, loadAllCards, loadMyCards, loadUserCardQuantity } from "./mycards
 import "./card.css";
 import { useUser } from "../useUser";
 import { Modal } from "./Modal";
+import { CardDisplay } from "./CardDisplay";
 
 export default function MyCardsPage() {
   const [allCards, setAllCards] = useState<Card[]>([]);
@@ -20,7 +21,7 @@ export default function MyCardsPage() {
     // Si une carte est sélectionnée, on charge sa quantité
     async function fetchQuantity() {
       if (selectedCard && user!.email) {
-        const result= await loadUserCardQuantity(user!.email,selectedCard.card_id);
+        const result = await loadUserCardQuantity(user!.email, selectedCard.card_id);
         setQuantity(result);
       }
     }
@@ -37,6 +38,16 @@ export default function MyCardsPage() {
       console.log(cards);
     });
   }, [cardSet]);
+
+  const onCardSave = async (quantity: number) => {
+    console.log(`Saving card ${selectedCard?.card_name}; quantity: ${quantity}`);
+
+    // Appeler le backend:
+    await new Promise((resolve) => setTimeout(resolve, 500));
+    console.log("Saved");
+
+    setSelectedCard(null);
+  };
 
   return (
     <>
@@ -59,44 +70,12 @@ export default function MyCardsPage() {
         ))}
       </div>
       <Modal
-        isOpen={selectedCard !== null}
         onClose={() => setSelectedCard(null)}
-        cardName={selectedCard?.card_name ?? ""}
+        card={selectedCard}
         quantity={quantity}
+        onSave={onCardSave}
       />
-        {selectedCard && <h2>{selectedCard.card_name}</h2>}
     </>
-  );
-}
-
-const extensionToUrl: Record<string, string> = {
-  A1: "puissance-genetique",
-  A1a: "l-ile-fabuleuse",
-};
-
-type CardProps = {
-  cardId: string;
-  onCardClick: () => void; // Ajout d'un gestionnaire de clic
-};
-
-function CardDisplay({ cardId, onCardClick }: CardProps) {
-  const trimLeftZeros = (str: string) => {
-    while (str.startsWith("0")) {
-      str = str.substring(1);
-    }
-    return str;
-  };
-
-  const [rawCardExtension, rawCardNumber] = cardId.split("-");
-  const cardNumber = trimLeftZeros(rawCardNumber);
-  const cardExtension = extensionToUrl[rawCardExtension];
-
-  return (
-    <img
-      loading="lazy"
-      src={`https://www.media.pokekalos.fr/img/jeux/pocket/extensions/${cardExtension}/${cardNumber}.png`}
-      onClick={onCardClick}
-    />
   );
 }
 

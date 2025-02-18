@@ -1,12 +1,29 @@
+import { Card } from "./mycards";
+import { CardDisplay } from "./CardDisplay";
+import { useState } from "react";
+
 type ModalProps = {
-  isOpen: boolean;
   onClose: () => void;
-  cardName: string;
+  card: Card | null;
   quantity: number;
+  onSave: (quantity: number) => Promise<void>;
 };
 
-export function Modal({ isOpen, onClose, cardName, quantity }: ModalProps) {
-  if (!isOpen) return null;
+
+// mettre à jour pour avoir un 2e input 
+export function Modal({ onClose, card, quantity, onSave }: ModalProps) {
+  if (card === null) {
+    return null;
+  }
+
+  const [inputQuantity, setInputQuantity] = useState(quantity);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const internalSave = async () => {
+    setIsLoading(true);
+    await onSave(inputQuantity);
+    setIsLoading(false);
+  };
 
   return (
     <div
@@ -34,8 +51,16 @@ export function Modal({ isOpen, onClose, cardName, quantity }: ModalProps) {
         }}
         onClick={(e) => e.stopPropagation()}
       >
-        <h2 style={{ marginTop: 0 }}>{cardName}</h2>
-        <p>Quantité : {quantity}</p>{" "}
+        <CardDisplay cardId={card.card_id} />
+        <h2 style={{ marginTop: 0 }}>{card.card_name}</h2>
+        <input
+          type="number"
+          value={inputQuantity}
+          onChange={(event) => setInputQuantity(Number(event.target.value))}
+        />
+        <button onClick={internalSave} disabled={isLoading}>
+          {isLoading ? "Loading..." : "Save"}
+        </button>
       </div>
     </div>
   );
