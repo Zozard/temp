@@ -50,11 +50,6 @@ Fonctionnel
     -Accepter / Refuser des propales
   - Confirmer que l'échange a eu lieu dans TCGP
 
-CSS
-
-- Améliorer la gueule de la Navbar
-- Centrer le bouton login de google
-
 ### 2025-02-18
 
 - Faire un layout un peu sympa pour le modal (+ tout style souhaité [optionnel])

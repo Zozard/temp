@@ -45,4 +45,17 @@ export async function loadUserCardQuantity(email: string, card_id: string) {
   return res.rows[0].quantity;
 }
 
+export async function updateOffer(card_id: string, email: string, quantity: number) {
+  const client = await initDatabase();
 
+  const existingOffer = await client.query(
+    "select id FROM user_cards where user_id in (select id from users where email = $1) and card_id in (select id from cards where cards.card_id = $2)",
+    [email, card_id]
+  );
+
+  if (existingOffer.rows[0]) {
+    return "il y a qqch";
+  } else {
+    return "y a rien";
+  }
+}

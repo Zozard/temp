@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Card, loadAllCards, loadMyCards, loadUserCardQuantity } from "./mycards";
+import { Card, loadAllCards, loadMyCards, loadUserCardQuantity, updateOffer } from "./mycards";
 import "./card.css";
 import { useUser } from "../useUser";
 import { Modal } from "./Modal";
@@ -25,7 +25,6 @@ export default function MyCardsPage() {
         setQuantity(result);
       }
     }
-
     fetchQuantity();
   }, [selectedCard]); // L'effet se relance si selectedCard change
 
@@ -41,7 +40,7 @@ export default function MyCardsPage() {
 
   const onCardSave = async (quantity: number) => {
     console.log(`Saving card ${selectedCard?.card_name}; quantity: ${quantity}`);
-
+    console.log(await updateOffer(selectedCard!.card_id, user!.email, quantity));
     // Appeler le backend:
     await new Promise((resolve) => setTimeout(resolve, 500));
     console.log("Saved");
