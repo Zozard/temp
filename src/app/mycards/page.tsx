@@ -22,6 +22,7 @@ export default function MyCardsPage() {
     async function fetchQuantity() {
       if (selectedCard && user!.email) {
         const result = await loadUserCardQuantity(user!.email, selectedCard.card_id);
+        console.log('result='+result)
         setQuantity(result);
       }
     }
@@ -44,8 +45,8 @@ export default function MyCardsPage() {
     // Appeler le backend:
     await new Promise((resolve) => setTimeout(resolve, 500));
     console.log("Saved");
-
     setSelectedCard(null);
+    setQuantity(0);
   };
 
   return (

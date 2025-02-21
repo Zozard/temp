@@ -54,8 +54,18 @@ export async function updateOffer(card_id: string, email: string, quantity: numb
   );
 
   if (existingOffer.rows[0]) {
+    // if a line user_cards already exists for this duet email-card --> update
+    await client.query(
+      "update user_cards set quantity = $1 where user_id in (select id from users where email = $2) and card_id in (select id from cards where cards.card_id = $3)",
+      [quantity, email, card_id]
+    );
     return "il y a qqch";
   } else {
+    // if a line user_cards does not exist for this duet email-card --> insert into
+    await client.query(
+      "insert into user_cards (user_id, card_id,direction,quantity) values ((select id from users where email=$1), (select id from cards where card_id=$2), 'SELL', $3)",
+      [email, card_id, quantity]
+    );
     return "y a rien";
   }
 }
