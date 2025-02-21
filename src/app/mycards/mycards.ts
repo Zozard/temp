@@ -48,6 +48,8 @@ export async function loadUserCardQuantity(email: string, card_id: string) {
 export async function updateOffer(card_id: string, email: string, quantity: number) {
   const client = await initDatabase();
 
+  // pistes d'amélioration : ajouter la clause on conflict sur le insert pour éviter des conflits de mise à jour en parallèle de la bdd
+
   const existingOffer = await client.query(
     "select id FROM user_cards where user_id in (select id from users where email = $1) and card_id in (select id from cards where cards.card_id = $2)",
     [email, card_id]
