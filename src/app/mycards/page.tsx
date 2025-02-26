@@ -13,8 +13,6 @@ export default function MyCardsPage() {
   const [cardSet, setCardSet] = useState("allCards");
   const [selectedCard, setSelectedCard] = useState<Card | null>(null);
   // État pour stocker la quantité lors de l'ouverture de la modale
-  const [quantityToSell, setQuantityToSell] = useState<number>(0);
-  const [quantityToBuy, setQuantityToBuy] = useState<number>(0);
   const user = useUser();
 
   // Effet qui se déclenche quand une carte est sélectionnée
@@ -36,34 +34,40 @@ export default function MyCardsPage() {
       cardSet === "allCards" ? loadAllCards() : loadMyCards(user!.email);
     allCardsPromise.then((cards) => {
       setAllCards(cards);
-    console.log(cards);
+      console.log(cards);
     });
   }, [cardSet]);
 
   const onCardSave = async (quantityToSell: number, quantityToBuy: number) => {
-    console.log(selectedCard);
-    console.log(quantityToBuy);
-    console.log(quantityToSell);
-    console.log(await updateToSell(selectedCard!.card_id, user!.email, quantityToSell));
-    console.log(await updateToBuy(selectedCard!.card_id, user!.email, quantityToBuy));
-    // Appeler le backend:
-    await new Promise((resolve) => setTimeout(resolve, 500));
+    if (selectedCard === null) {
+      throw new Error("No card was selected, something wrong happened");
+    }
+
+    console.log({ selectedCard, quantityToBuy, quantityToSell });
+    // console.log(quantityToBuy);
+    // console.log(quantityToSell);
+
+    const cardToSellPromise = updateToSell(selectedCard.card_id, user!.email, quantityToSell);
+    const cardToBuyPromise = updateToBuy(selectedCard.card_id, user!.email, quantityToBuy);
+    await Promise.all([cardToBuyPromise, cardToSellPromise]);
     console.log("Saved");
+
+    // préparation d'un nouvel objet déstiné à être utilisé dans le setter
+    const allCardsWithoutUpdatedOne = allCards.filter(
+      (card) => card.card_id !== selectedCard?.card_id
+    );
+    const updatedSelectedCard = {
+      ...selectedCard,
+      quantity_to_buy: quantityToBuy,
+      quantity_to_sell: quantityToSell,
+    };
+    const updatedAllCards = [...allCardsWithoutUpdatedOne, updatedSelectedCard].sort((a, b) =>
+      a.card_id.localeCompare(b.card_id)
+    );
+    setAllCards(updatedAllCards);
+
     setSelectedCard(null);
-    setQuantityToSell(0);
-    setQuantityToBuy(0);
   };
-
-  const handleCardClick = (card: Card) =>
-  {
-
-    setSelectedCard(card);
-    console.log("quantityToSell"+card.quantity_to_sell!);
-    console.log("quantityToBuy"+card.quantity_to_buy);
-    setQuantityToSell(card.quantity_to_sell!);     
-    setQuantityToBuy(card.quantity_to_buy!);
-    console.log("quantity"+quantityToSell);     // a voir avec samy pourquoi == 0 
-  }
 
   return (
     <>
@@ -82,18 +86,12 @@ export default function MyCardsPage() {
               cardId={card.card_id}
               quantityToSell={card.quantity_to_sell!}
               quantityToBuy={card.quantity_to_buy!}
-              onCardClick={() => handleCardClick(card)}
+              onCardClick={() => setSelectedCard(card)}
             ></CardDisplay>
           </div>
         ))}
       </div>
-      <Modal
-        onClose={() => setSelectedCard(null)}
-        card={selectedCard}
-        quantityToSell={quantityToSell}
-        quantityToBuy={quantityToBuy}
-        onSave={onCardSave}
-      />
+      <Modal onClose={() => setSelectedCard(null)} card={selectedCard} onSave={onCardSave} />
     </>
   );
 }

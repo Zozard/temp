@@ -7,8 +7,8 @@ export type Card = {
   card_id: string;
   card_name: string;
   rarity: string;
-  quantity_to_sell: number | null;
-  quantity_to_buy: number | null;
+  quantity_to_sell: number;
+  quantity_to_buy: number;
 };
 
 export async function loadAllCards(): Promise<Card[]> {
@@ -22,17 +22,27 @@ export async function loadAllCards(): Promise<Card[]> {
   //    ["g.zozine@gmail.com"]
   //  );
 
-  // version ok encore mieux 
-/*   const res = await client.query<Card>(
+  // version ok encore mieux
+  /*   const res = await client.query<Card>(
     "SELECT cards.id, cards.card_id, cards.card_name, cards.rarity, user_cards.quantity FROM cards LEFT OUTER JOIN ( SELECT user_cards.* FROM user_cards JOIN users ON users.id = user_cards.user_id  WHERE users.email = $1) AS user_cards ON cards.id = user_cards.card_id",
     ["g.zozine@gmail.com"]
   ); */
 
   //version avec quantity_buy et quantity_sell
   const res = await client.query<Card>(
-    "SELECT cards.id, cards.card_id, cards.card_name, cards.rarity, SUM(CASE WHEN user_cards.direction = 'BUY' THEN user_cards.quantity ELSE 0 END) AS quantity_to_buy, SUM(CASE WHEN user_cards.direction = 'SELL' THEN user_cards.quantity ELSE 0 END) AS quantity_to_sell FROM cards LEFT OUTER JOIN user_cards ON cards.id = user_cards.card_id AND user_cards.user_id = (SELECT id FROM users WHERE email = $1) GROUP BY cards.id, cards.card_id, cards.card_name, cards.rarity",
+    `SELECT
+      cards.id,
+      cards.card_id,
+      cards.card_name,
+      cards.rarity,
+      SUM(CASE WHEN user_cards.direction = 'BUY' THEN user_cards.quantity ELSE 0 END) AS quantity_to_buy,
+      SUM(CASE WHEN user_cards.direction = 'SELL' THEN user_cards.quantity ELSE 0 END) AS quantity_to_sell
+    FROM cards
+    LEFT OUTER JOIN user_cards ON cards.id = user_cards.card_id AND user_cards.user_id = (SELECT id FROM users WHERE email = $1)
+    GROUP BY cards.id, cards.card_id, cards.card_name, cards.rarity
+    ORDER BY cards.card_id`,
     ["g.zozine@gmail.com"]
-  ); 
+  );
 
   return res.rows;
 }

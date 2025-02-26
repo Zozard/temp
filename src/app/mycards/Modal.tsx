@@ -6,26 +6,32 @@ import "./Modal.css";
 type ModalProps = {
   onClose: () => void;
   card: Card | null;
-  quantityToSell: number | null;
-  quantityToBuy: number | null;
   onSave: (quantityToSell: number, quantityToBuy: number) => Promise<void>;
 };
 
 // mettre à jour pour avoir un 2e input
 export function Modal({ onClose, card, onSave }: ModalProps) {
-  const [inputQuantityToSell, setInputQuantityToSell] = useState(card?.quantity_to_sell);
-  const [inputQuantityToBuy, setInputQuantityToBuy] = useState(card?.quantity_to_buy);
-  const [isLoading, setIsLoading] = useState(false);
-
-  console.log("input" + inputQuantityToSell);
-
   if (card === null) {
     return null;
   }
 
+  return <InnerModal card={card} onClose={onClose} onSave={onSave}/>
+}
+
+type InnerModalProps = {
+  card: Card;
+  onClose: () => void;
+  onSave: (quantityToSell: number, quantityToBuy: number) => Promise<void>;
+};
+
+function InnerModal({card, onClose, onSave}: InnerModalProps) {
+  const [isLoading, setIsLoading] = useState(false);
+  const [inputQuantityToSell, setInputQuantityToSell] = useState(card.quantity_to_sell);
+  const [inputQuantityToBuy, setInputQuantityToBuy] = useState(card.quantity_to_buy);
+
   const internalSave = async () => {
     setIsLoading(true);
-    await onSave(inputQuantityToSell!, inputQuantityToBuy!);
+    await onSave(inputQuantityToSell, inputQuantityToBuy);
     setIsLoading(false);
   };
 
@@ -70,14 +76,14 @@ export function Modal({ onClose, card, onSave }: ModalProps) {
           <label> A donner : </label>
           <input
             type="number"
-            value={inputQuantityToSell ?? card.quantity_to_sell!} // cette astuce me paraît dégueu mais au moins ça marche
+            value={inputQuantityToSell} // cette astuce me paraît dégueu mais au moins ça marche
             onChange={(event) => setInputQuantityToSell(Number(event.target.value))}
           />
           <br />
           <label> Recherchées : </label>
           <input
             type="number"
-            value={inputQuantityToBuy ?? card.quantity_to_buy!} // cette astuce me paraît dégueu mais au moins ça marche
+            value={inputQuantityToBuy} // cette astuce me paraît dégueu mais au moins ça marche
             onChange={(event) => setInputQuantityToBuy(Number(event.target.value))}
           />
         </div>

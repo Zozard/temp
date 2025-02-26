@@ -58,6 +58,15 @@ Fonctionnel
 - Lire/regarder théorie sur React
   https://grafikart.fr/formations/react
 
+### 2025-02-26
+
+- Faire un layout un peu sympa pour le modal (+ tout style souhaité [optionnel])
+- Afficher en overlay les quantités sur les cartes (suggestion : si 0 alors pas d'overlay) --> pas forcément sur le hover
+- Pouvoir filtrer sur les cartes que j'ai déjà renseignées sans faire appel au backend (revoir le bouton My Cards peut-être)
+- Virer l'adresse email en dur dans le backend
+- Lire/regarder théorie sur React
+  https://grafikart.fr/formations/react
+
 ## Commande SQL pour insérer une nouvelle carte
 
 ```sql
