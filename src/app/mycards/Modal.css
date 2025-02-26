@@ -1,0 +1,47 @@
+/* Conteneur principal */
+.modal-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Divise en deux colonnes égales */
+    grid-template-rows: 1fr 1fr 1fr; /* Une ligne principale et une pour le bouton */
+    grid-template-areas: 
+      "card title title"
+      "card input-container input-container"
+      "card button button";
+    gap: 20px;
+    height: 400px; /* Hauteur fixe ou ajustez selon vos besoins */
+    width: 100%;
+  }
+
+  .modal-card {
+    grid-area: card;
+    width: 100%;
+    height: 200%;
+    object-fit: cover;
+  }
+
+  .modal-input-container {
+    grid-area: input-container;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Centre verticalement */
+    gap: 10px;
+  }
+
+  .modal-button {
+    grid-area: button;
+    justify-self: end; /* Aligne à droite */
+    align-self: end; /* Aligne en bas */
+  }
+
+  input {
+    width: 25%;
+    align-self: center;
+    text-align: center;
+  }
+
+  label, h2 {
+    align-self: center;
+    text-align: center;
+  }
+
+  

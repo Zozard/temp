@@ -1,6 +1,7 @@
 import { Card } from "./mycards";
 import { CardDisplay } from "./CardDisplay";
 import { useState } from "react";
+import "./Modal.css";
 
 type ModalProps = {
   onClose: () => void;
@@ -16,7 +17,7 @@ export function Modal({ onClose, card, onSave }: ModalProps) {
   const [inputQuantityToBuy, setInputQuantityToBuy] = useState(card?.quantity_to_buy);
   const [isLoading, setIsLoading] = useState(false);
 
-  console.log("input"+inputQuantityToSell);
+  console.log("input" + inputQuantityToSell);
 
   if (card === null) {
     return null;
@@ -45,6 +46,7 @@ export function Modal({ onClose, card, onSave }: ModalProps) {
       onClick={onClose}
     >
       <div
+        className="modal-container"
         style={{
           backgroundColor: "white",
           padding: "20px",
@@ -54,23 +56,36 @@ export function Modal({ onClose, card, onSave }: ModalProps) {
         }}
         onClick={(e) => e.stopPropagation()}
       >
-        <CardDisplay cardId={card.card_id} quantityToSell={card.quantity_to_sell!} quantityToBuy={card.quantity_to_buy!}/>
-        <h2 style={{ marginTop: 0 }}>{card.card_name}</h2>
-        <label> A donner : </label>
-        <input
-          type="number"
-          value={inputQuantityToSell ?? card.quantity_to_sell!} // cette astuce me paraît dégueu mais au moins ça marche
-          onChange={(event) => setInputQuantityToSell(Number(event.target.value))}
-        /><br/>
-        <label> Recherchées : </label>
-        <input
-          type="number"
-          value={inputQuantityToBuy ?? card.quantity_to_buy!} // cette astuce me paraît dégueu mais au moins ça marche
-          onChange={(event) => setInputQuantityToBuy(Number(event.target.value))}
-        />
-        <button onClick={internalSave} disabled={isLoading}>
-          {isLoading ? "Loading..." : "Save"}
-        </button>
+        <div className="modal-card">
+          <CardDisplay
+            cardId={card.card_id}
+            quantityToSell={card.quantity_to_sell!}
+            quantityToBuy={card.quantity_to_buy!}
+          />
+        </div>
+        <div className="title">
+          <h2>{card.card_name}</h2>
+        </div>
+        <div className="modal-input-container">
+          <label> A donner : </label>
+          <input
+            type="number"
+            value={inputQuantityToSell ?? card.quantity_to_sell!} // cette astuce me paraît dégueu mais au moins ça marche
+            onChange={(event) => setInputQuantityToSell(Number(event.target.value))}
+          />
+          <br />
+          <label> Recherchées : </label>
+          <input
+            type="number"
+            value={inputQuantityToBuy ?? card.quantity_to_buy!} // cette astuce me paraît dégueu mais au moins ça marche
+            onChange={(event) => setInputQuantityToBuy(Number(event.target.value))}
+          />
+        </div>
+        <div className="modal-button">
+          <button onClick={internalSave} disabled={isLoading}>
+            {isLoading ? "Loading..." : "Save"}
+          </button>
+        </div>
       </div>
     </div>
   );
