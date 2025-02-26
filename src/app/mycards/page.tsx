@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Card, loadAllCards, loadMyCards, updateOffer } from "./mycards";
+import { Card, loadAllCards, loadMyCards, updateToBuy, updateToSell } from "./mycards";
 import "./card.css";
 import { useUser } from "../useUser";
 import { Modal } from "./Modal";
@@ -13,7 +13,8 @@ export default function MyCardsPage() {
   const [cardSet, setCardSet] = useState("allCards");
   const [selectedCard, setSelectedCard] = useState<Card | null>(null);
   // État pour stocker la quantité lors de l'ouverture de la modale
-  const [quantity, setQuantity] = useState<number>(0);
+  const [quantityToSell, setQuantityToSell] = useState<number>(0);
+  const [quantityToBuy, setQuantityToBuy] = useState<number>(0);
   const user = useUser();
 
   // Effet qui se déclenche quand une carte est sélectionnée
@@ -39,23 +40,29 @@ export default function MyCardsPage() {
     });
   }, [cardSet]);
 
-  const onCardSave = async (quantity: number) => {
-    console.log(`Saving card ${selectedCard?.card_name}; quantity: ${quantity}`);
-    console.log(await updateOffer(selectedCard!.card_id, user!.email, quantity));
+  const onCardSave = async (quantityToSell: number, quantityToBuy: number) => {
+    console.log(selectedCard);
+    console.log(quantityToBuy);
+    console.log(quantityToSell);
+    console.log(await updateToSell(selectedCard!.card_id, user!.email, quantityToSell));
+    console.log(await updateToBuy(selectedCard!.card_id, user!.email, quantityToBuy));
     // Appeler le backend:
     await new Promise((resolve) => setTimeout(resolve, 500));
     console.log("Saved");
     setSelectedCard(null);
-    setQuantity(0);
+    setQuantityToSell(0);
+    setQuantityToBuy(0);
   };
 
   const handleCardClick = (card: Card) =>
   {
+
     setSelectedCard(card);
-    console.log(card.quantity);
-    console.log(quantity);
-    setQuantity(card.quantity!);
-    console.log(quantity);
+    console.log("quantityToSell"+card.quantity_to_sell!);
+    console.log("quantityToBuy"+card.quantity_to_buy);
+    setQuantityToSell(card.quantity_to_sell!);     
+    setQuantityToBuy(card.quantity_to_buy!);
+    console.log("quantity"+quantityToSell);     // a voir avec samy pourquoi == 0 
   }
 
   return (
@@ -73,7 +80,8 @@ export default function MyCardsPage() {
           <div key={card.card_id} className="card">
             <CardDisplay
               cardId={card.card_id}
-              quantity={card.quantity!}
+              quantityToSell={card.quantity_to_sell!}
+              quantityToBuy={card.quantity_to_buy!}
               onCardClick={() => handleCardClick(card)}
             ></CardDisplay>
           </div>
@@ -82,7 +90,8 @@ export default function MyCardsPage() {
       <Modal
         onClose={() => setSelectedCard(null)}
         card={selectedCard}
-        quantity={quantity}
+        quantityToSell={quantityToSell}
+        quantityToBuy={quantityToBuy}
         onSave={onCardSave}
       />
     </>

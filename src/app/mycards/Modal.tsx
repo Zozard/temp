@@ -5,16 +5,18 @@ import { useState } from "react";
 type ModalProps = {
   onClose: () => void;
   card: Card | null;
-  quantity: number | null;
-  onSave: (quantity: number) => Promise<void>;
+  quantityToSell: number | null;
+  quantityToBuy: number | null;
+  onSave: (quantityToSell: number, quantityToBuy: number) => Promise<void>;
 };
 
 // mettre à jour pour avoir un 2e input
 export function Modal({ onClose, card, onSave }: ModalProps) {
-  const [inputQuantity, setInputQuantity] = useState(card?.quantity);
+  const [inputQuantityToSell, setInputQuantityToSell] = useState(card?.quantity_to_sell);
+  const [inputQuantityToBuy, setInputQuantityToBuy] = useState(card?.quantity_to_buy);
   const [isLoading, setIsLoading] = useState(false);
 
-  console.log("input"+inputQuantity);
+  console.log("input"+inputQuantityToSell);
 
   if (card === null) {
     return null;
@@ -22,7 +24,7 @@ export function Modal({ onClose, card, onSave }: ModalProps) {
 
   const internalSave = async () => {
     setIsLoading(true);
-    await onSave(inputQuantity!);
+    await onSave(inputQuantityToSell!, inputQuantityToBuy!);
     setIsLoading(false);
   };
 
@@ -52,12 +54,19 @@ export function Modal({ onClose, card, onSave }: ModalProps) {
         }}
         onClick={(e) => e.stopPropagation()}
       >
-        <CardDisplay cardId={card.card_id} quantity={card.quantity!} />
+        <CardDisplay cardId={card.card_id} quantityToSell={card.quantity_to_sell!} quantityToBuy={card.quantity_to_buy!}/>
         <h2 style={{ marginTop: 0 }}>{card.card_name}</h2>
+        <label> A donner : </label>
         <input
           type="number"
-          value={inputQuantity ?? card.quantity!} // cette astuce me paraît dégueu mais au moins ça marche
-          onChange={(event) => setInputQuantity(Number(event.target.value))}
+          value={inputQuantityToSell ?? card.quantity_to_sell!} // cette astuce me paraît dégueu mais au moins ça marche
+          onChange={(event) => setInputQuantityToSell(Number(event.target.value))}
+        /><br/>
+        <label> Recherchées : </label>
+        <input
+          type="number"
+          value={inputQuantityToBuy ?? card.quantity_to_buy!} // cette astuce me paraît dégueu mais au moins ça marche
+          onChange={(event) => setInputQuantityToBuy(Number(event.target.value))}
         />
         <button onClick={internalSave} disabled={isLoading}>
           {isLoading ? "Loading..." : "Save"}
