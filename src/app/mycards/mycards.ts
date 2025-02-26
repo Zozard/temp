@@ -7,12 +7,23 @@ export type Card = {
   card_id: string;
   card_name: string;
   rarity: string;
+  quantity: number | null;
 };
 
 export async function loadAllCards(): Promise<Card[]> {
   const client = await initDatabase();
 
-  const res = await client.query<Card>("SELECT id, card_id, card_name, rarity FROM cards");
+  //const res = await client.query<Card>("SELECT id, card_id, card_name, rarity, 5 as quantity FROM cards");
+
+  //  const res = await client.query<Card>(
+  //    "SELECT cards.id, cards.card_id, cards.card_name, cards.rarity, user_cards.quantity FROM user_cards join cards on cards.id = user_cards.card_id join users on users.id = user_cards.user_id where email = $1",
+  //    ["g.zozine@gmail.com"]
+  //  );
+
+  const res = await client.query<Card>(
+    "SELECT cards.id, cards.card_id, cards.card_name, cards.rarity, user_cards.quantity FROM cards LEFT OUTER JOIN ( SELECT user_cards.* FROM user_cards JOIN users ON users.id = user_cards.user_id  WHERE users.email = $1) AS user_cards ON cards.id = user_cards.card_id",
+    ["g.zozine@gmail.com"]
+  );
 
   return res.rows;
 }

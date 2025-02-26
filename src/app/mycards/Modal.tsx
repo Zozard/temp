@@ -5,14 +5,16 @@ import { useState } from "react";
 type ModalProps = {
   onClose: () => void;
   card: Card | null;
-  quantity: number;
+  quantity: number | null;
   onSave: (quantity: number) => Promise<void>;
 };
 
 // mettre à jour pour avoir un 2e input
-export function Modal({ onClose, card, quantity, onSave }: ModalProps) {
-  const [inputQuantity, setInputQuantity] = useState(quantity);
+export function Modal({ onClose, card, onSave }: ModalProps) {
+  const [inputQuantity, setInputQuantity] = useState(card?.quantity);
   const [isLoading, setIsLoading] = useState(false);
+
+  console.log("input"+inputQuantity);
 
   if (card === null) {
     return null;
@@ -20,7 +22,7 @@ export function Modal({ onClose, card, quantity, onSave }: ModalProps) {
 
   const internalSave = async () => {
     setIsLoading(true);
-    await onSave(inputQuantity);
+    await onSave(inputQuantity!);
     setIsLoading(false);
   };
 
@@ -50,11 +52,11 @@ export function Modal({ onClose, card, quantity, onSave }: ModalProps) {
         }}
         onClick={(e) => e.stopPropagation()}
       >
-        <CardDisplay cardId={card.card_id} />
+        <CardDisplay cardId={card.card_id} quantity={card.quantity!} />
         <h2 style={{ marginTop: 0 }}>{card.card_name}</h2>
         <input
           type="number"
-          value={inputQuantity}
+          value={inputQuantity ?? card.quantity!} // cette astuce me paraît dégueu mais au moins ça marche
           onChange={(event) => setInputQuantity(Number(event.target.value))}
         />
         <button onClick={internalSave} disabled={isLoading}>

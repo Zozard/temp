@@ -17,17 +17,17 @@ export default function MyCardsPage() {
   const user = useUser();
 
   // Effet qui se déclenche quand une carte est sélectionnée
-  useEffect(() => {
-    // Si une carte est sélectionnée, on charge sa quantité
-    async function fetchQuantity() {
-      if (selectedCard && user!.email) {
-        const result = await loadUserCardQuantity(user!.email, selectedCard.card_id);
-        console.log('result='+result)
-        setQuantity(result);
-      }
-    }
-    fetchQuantity();
-  }, [selectedCard]); // L'effet se relance si selectedCard change
+  // useEffect(() => {
+  // Si une carte est sélectionnée, on charge sa quantité
+  //   async function fetchQuantity() {
+  //   if (selectedCard && user!.email) {
+  //      const result = await loadUserCardQuantity(user!.email, selectedCard.card_id);
+  //     console.log('result='+result)
+  //       setQuantity(result);
+  //     }
+  //  }
+  //   fetchQuantity();
+  //  }, [selectedCard]); // L'effet se relance si selectedCard change
 
   // Effet pour filtrer les cartes affichées (se déclenche quand on clique sur les boutons en haut)
   useEffect(() => {
@@ -35,7 +35,7 @@ export default function MyCardsPage() {
       cardSet === "allCards" ? loadAllCards() : loadMyCards(user!.email);
     allCardsPromise.then((cards) => {
       setAllCards(cards);
-      console.log(cards);
+    console.log(cards);
     });
   }, [cardSet]);
 
@@ -48,6 +48,15 @@ export default function MyCardsPage() {
     setSelectedCard(null);
     setQuantity(0);
   };
+
+  const handleCardClick = (card: Card) =>
+  {
+    setSelectedCard(card);
+    console.log(card.quantity);
+    console.log(quantity);
+    setQuantity(card.quantity!);
+    console.log(quantity);
+  }
 
   return (
     <>
@@ -64,7 +73,8 @@ export default function MyCardsPage() {
           <div key={card.card_id} className="card">
             <CardDisplay
               cardId={card.card_id}
-              onCardClick={() => setSelectedCard(card)}
+              quantity={card.quantity!}
+              onCardClick={() => handleCardClick(card)}
             ></CardDisplay>
           </div>
         ))}

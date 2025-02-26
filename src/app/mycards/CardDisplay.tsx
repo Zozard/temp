@@ -5,11 +5,11 @@ const extensionToUrl: Record<string, string> = {
 
 type CardProps = {
   cardId: string;
+  quantity: number | null;
   onCardClick?: () => void; // Ajout d'un gestionnaire de clic
 };
 
-
-export function CardDisplay({ cardId, onCardClick }: CardProps) {
+export function CardDisplay({ cardId, quantity, onCardClick }: CardProps) {
   const trimLeftZeros = (str: string) => {
     while (str.startsWith("0")) {
       str = str.substring(1);
@@ -22,10 +22,13 @@ export function CardDisplay({ cardId, onCardClick }: CardProps) {
   const cardExtension = extensionToUrl[rawCardExtension];
 
   return (
-    <img
-      loading="lazy"
-      src={`https://www.media.pokekalos.fr/img/jeux/pocket/extensions/${cardExtension}/${cardNumber}.png`}
-      onClick={onCardClick}
-    />
+    <>
+      <img
+        loading="lazy"
+        src={`https://www.media.pokekalos.fr/img/jeux/pocket/extensions/${cardExtension}/${cardNumber}.png`}
+        onClick={onCardClick}
+      />
+      <p>Quantité : {quantity} </p>
+    </>
   );
 }
