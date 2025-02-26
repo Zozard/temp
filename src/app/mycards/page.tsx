@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Card, loadAllCards, loadMyCards, loadUserCardQuantity, updateOffer } from "./mycards";
+import { Card, loadAllCards, loadMyCards, updateOffer } from "./mycards";
 import "./card.css";
 import { useUser } from "../useUser";
 import { Modal } from "./Modal";
