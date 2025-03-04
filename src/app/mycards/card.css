@@ -6,6 +6,14 @@
     justify-content: center;
 }
 
+.card-quantity-container {
+    position: relative;
+  }
+
+.card-quantity-container.has-quantity {
+    filter: grayscale(80%);
+}
+
 .card {
     width: 300px;
     transition: transform 0.25s ease;
@@ -27,5 +35,36 @@ img {
 }
 .toggle-button-cardSet {
     margin: 20px;
+}
+
+.quantity-display {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(255, 255, 255);
+    border: 1px solid #cccccc;
+    border-radius: 8px;
+    padding: 10px;
+    text-align: center;
+    font-weight: bold;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    filter: none !important;
+}
+
+.card-quantity-container.has-quantity .quantity-display {
+    isolation: isolate;
+}
+
+.quantity-display:empty{
+    display: none;
+}
+
+.quantity-sell {
+    color: green;
+}
+
+.quantity-buy {
+    color: blue;
 }
 

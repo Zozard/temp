@@ -7,10 +7,17 @@ type CardProps = {
   cardId: string;
   quantityToSell: number | null;
   quantityToBuy: number | null;
+  inModal: boolean;
   onCardClick?: () => void; // Ajout d'un gestionnaire de clic
 };
 
-export function CardDisplay({ cardId, quantityToSell, quantityToBuy, onCardClick }: CardProps) {
+export function CardDisplay({
+  cardId,
+  quantityToSell,
+  quantityToBuy,
+  inModal,
+  onCardClick,
+}: CardProps) {
   const trimLeftZeros = (str: string) => {
     while (str.startsWith("0")) {
       str = str.substring(1);
@@ -18,19 +25,51 @@ export function CardDisplay({ cardId, quantityToSell, quantityToBuy, onCardClick
     return str;
   };
 
+  if (quantityToBuy === null) {
+    quantityToBuy = 0;
+  }
+  if (quantityToSell === null) {
+    quantityToSell = 0;
+  }
+
   const [rawCardExtension, rawCardNumber] = cardId.split("-");
   const cardNumber = trimLeftZeros(rawCardNumber);
   const cardExtension = extensionToUrl[rawCardExtension];
 
+  const hasQuantity = (quantityToSell ?? 0) > 0 || (quantityToBuy ?? 0) > 0;
+
   return (
     <>
-      <img
-        loading="lazy"
-        src={`https://www.media.pokekalos.fr/img/jeux/pocket/extensions/${cardExtension}/${cardNumber}.png`}
-        onClick={onCardClick}
-      />
-      <p>A donner : {quantityToSell} </p>
-      <p>Recherchées : {quantityToBuy} </p>
+      <div className={`card-quantity-container ${hasQuantity ? "has-quantity" : ""}`}>
+        <img
+          loading="lazy"
+          src={`https://www.media.pokekalos.fr/img/jeux/pocket/extensions/${cardExtension}/${cardNumber}.png`}
+          onClick={onCardClick}
+        />
+        {!inModal && (
+          <QuantityDisplay quantityToBuy={quantityToBuy} quantityToSell={quantityToSell} />
+        )}
+      </div>
     </>
+  );
+}
+
+interface QuantityDisplayProps {
+  quantityToSell: number;
+  quantityToBuy: number;
+}
+
+function QuantityDisplay({ quantityToBuy, quantityToSell }: QuantityDisplayProps) {
+  if (quantityToSell === 0 && quantityToBuy === 0) {
+    return null;
+  }
+
+  return (
+    <div className="quantity-wrapper">
+      <div className="quantity-display">
+        {quantityToSell > 0 && <div className="quantity-sell">À donner : {quantityToSell}</div>}
+        {quantityToBuy > 0 && <div className="quantity-buy">Recherchées : {quantityToBuy}</div>}
+      </div>
+    </div>
   );
 }

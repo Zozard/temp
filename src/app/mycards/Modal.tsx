@@ -65,8 +65,9 @@ function InnerModal({card, onClose, onSave}: InnerModalProps) {
         <div className="modal-card">
           <CardDisplay
             cardId={card.card_id}
-            quantityToSell={card.quantity_to_sell!}
-            quantityToBuy={card.quantity_to_buy!}
+            quantityToSell={card.quantity_to_sell}
+            quantityToBuy={card.quantity_to_buy}
+            inModal={true}
           />
         </div>
         <div className="title">

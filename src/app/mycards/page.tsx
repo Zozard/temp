@@ -87,6 +87,7 @@ export default function MyCardsPage() {
               quantityToSell={card.quantity_to_sell!}
               quantityToBuy={card.quantity_to_buy!}
               onCardClick={() => setSelectedCard(card)}
+              inModal={false}
             ></CardDisplay>
           </div>
         ))}
