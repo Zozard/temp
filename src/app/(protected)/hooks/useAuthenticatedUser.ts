@@ -1,3 +1,5 @@
+"use client";
+
 import { useUser } from "@/app/useUser";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
