@@ -11,7 +11,7 @@ export type Card = {
   quantity_to_buy: number;
 };
 
-export async function loadAllCards(): Promise<Card[]> {
+export async function loadAllCards(email: string): Promise<Card[]> {
   const client = await initDatabase();
 
   //const res = await client.query<Card>("SELECT id, card_id, card_name, rarity, 5 as quantity FROM cards");
@@ -41,7 +41,7 @@ export async function loadAllCards(): Promise<Card[]> {
     LEFT OUTER JOIN user_cards ON cards.id = user_cards.card_id AND user_cards.user_id = (SELECT id FROM users WHERE email = $1)
     GROUP BY cards.id, cards.card_id, cards.card_name, cards.rarity
     ORDER BY cards.card_id`,
-    ["g.zozine@gmail.com"]
+    [email]
   );
 
   return res.rows;

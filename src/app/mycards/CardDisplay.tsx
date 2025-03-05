@@ -1,3 +1,5 @@
+"use client";
+
 const extensionToUrl: Record<string, string> = {
   A1: "puissance-genetique",
   A1a: "l-ile-fabuleuse",

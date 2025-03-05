@@ -28,10 +28,19 @@ export default function MyCardsPage() {
   //   fetchQuantity();
   //  }, [selectedCard]); // L'effet se relance si selectedCard change
 
+
+  // pas propre mais pas trouvé d'autre solution pour le moment
+  // problème de user ou user.email can be null
+  let email: string | undefined = user?.email;
+  if ( email === undefined)
+  {
+    email = "g.zozine@gmail.com"
+  }
+
   // Effet pour filtrer les cartes affichées (se déclenche quand on clique sur les boutons en haut)
   useEffect(() => {
     const allCardsPromise: Promise<Card[]> =
-      cardSet === "allCards" ? loadAllCards() : loadMyCards(user!.email);
+      cardSet === "allCards" ? loadAllCards(email) : loadMyCards(user!.email);
     allCardsPromise.then((cards) => {
       setAllCards(cards);
       console.log(cards);

@@ -1,3 +1,5 @@
+"use client";
+
 import { Card } from "./mycards";
 import { CardDisplay } from "./CardDisplay";
 import { useState } from "react";
