@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { Card, loadAllCards, loadMyCards, updateToBuy, updateToSell } from "./mycards";
 import "./card.css";
 import { useUser } from "../useUser";
@@ -10,7 +10,7 @@ import { CardDisplay } from "./CardDisplay";
 export default function MyCardsPage() {
   const [allCards, setAllCards] = useState<Card[]>([]);
   // toggle links for restricting which cards we display : all cards or just my cards to sell / to give
-  const [cardSet, setCardSet] = useState("allCards");
+  const [cardFilter, setCardFilter] = useState(false);
   const [selectedCard, setSelectedCard] = useState<Card | null>(null);
   // État pour stocker la quantité lors de l'ouverture de la modale
   const user = useUser();
@@ -28,24 +28,35 @@ export default function MyCardsPage() {
   //   fetchQuantity();
   //  }, [selectedCard]); // L'effet se relance si selectedCard change
 
-
   // pas propre mais pas trouvé d'autre solution pour le moment
   // problème de user ou user.email can be null
   let email: string | undefined = user?.email;
-  if ( email === undefined)
-  {
-    email = "g.zozine@gmail.com"
+  if (email === undefined) {
+    email = "g.zozine@gmail.com";
   }
 
   // Effet pour filtrer les cartes affichées (se déclenche quand on clique sur les boutons en haut)
   useEffect(() => {
-    const allCardsPromise: Promise<Card[]> =
-      cardSet === "allCards" ? loadAllCards(email) : loadMyCards(user!.email);
+    const allCardsPromise: Promise<Card[]> = loadAllCards(email);
     allCardsPromise.then((cards) => {
       setAllCards(cards);
       console.log(cards);
+      console.log(cards[26]);
     });
-  }, [cardSet]);
+  }, []);
+
+  console.log(allCards.filter((card) => card.quantity_to_buy > 0 || card.quantity_to_sell > 0));
+
+  const filteredCards = useMemo(() => {
+    console.log("Filtrage !");
+    if (cardFilter) {
+      return allCards.filter((card) => card.quantity_to_buy > 0 || card.quantity_to_sell > 0);
+    }
+    else
+    {
+      return allCards;
+    }
+  }, [cardFilter, allCards]);
 
   const onCardSave = async (quantityToSell: number, quantityToBuy: number) => {
     if (selectedCard === null) {
@@ -62,7 +73,7 @@ export default function MyCardsPage() {
     console.log("Saved");
 
     // préparation d'un nouvel objet déstiné à être utilisé dans le setter
-    const allCardsWithoutUpdatedOne = allCards.filter(
+    const allCardsWithoutUpdatedOne = filteredCards.filter(
       (card) => card.card_id !== selectedCard?.card_id
     );
     const updatedSelectedCard = {
@@ -81,15 +92,15 @@ export default function MyCardsPage() {
   return (
     <>
       <div className="cardSetSelector">
-        <button className="toggle-button-cardSet" onClick={() => setCardSet("allCards")}>
+        <button className="toggle-button-cardSet" onClick={() => setCardFilter(false)}>
           All cards
         </button>
-        <button className="toggle-button-cardSet" onClick={() => setCardSet("myCards")}>
+        <button className="toggle-button-cardSet" onClick={() => setCardFilter(true)}>
           My Cards
         </button>
       </div>
       <div className="card-container">
-        {allCards.map((card) => (
+        {filteredCards.map((card) => (
           <div key={card.card_id} className="card">
             <CardDisplay
               cardId={card.card_id}
