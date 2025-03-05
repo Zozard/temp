@@ -10,7 +10,7 @@ interface Card {
 
 const Card: React.FC <Card> = (props) => {
   return ( 
-  <div className="card card-content"> 
+  <div className="market-card"> 
     <div className="card-title">{props.title}</div>
     <div className="card-bottom">{props.owner}</div>
     <div className="card-bottom">{props.date}</div>

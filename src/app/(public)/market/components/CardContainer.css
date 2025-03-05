@@ -1,5 +1,5 @@
 /* CardContainer.css */
-.card-container {
+.market-card-container {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
     gap: 1rem;
@@ -10,7 +10,6 @@
     background: #3d2c59;
     border-radius: 2.5em;
     margin: 1em;
-  }
   
   .card-container-title{
     font-weight: bold;
@@ -18,23 +17,23 @@
     size: big;
   }
 
-
-
   /* Pour une scrollbar plus jolie (optionnel) */
-  .card-container::-webkit-scrollbar {
+  &::-webkit-scrollbar {
     width: 8px;
   }
   
-  .card-container::-webkit-scrollbar-track {
+  &::-webkit-scrollbar-track {
     background: #f1f1f1;
     border-radius: 4px;
   }
   
-  .card-container::-webkit-scrollbar-thumb {
+  &::-webkit-scrollbar-thumb {
     background: #bc00eb59;
     border-radius: 4px;
   }
   
-  .card-container::-webkit-scrollbar-thumb:hover {
+  &::-webkit-scrollbar-thumb:hover {
     background: #bc00eb80;
   }
+
+}

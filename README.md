@@ -67,6 +67,14 @@ Fonctionnel
 - Lire/regarder théorie sur React
   https://grafikart.fr/formations/react
 
+### 2025-03-05
+
+- Faire en sorte que Market lise PostGres
+- Faire le tableau dégueu dans Discord avec Samy en utilisant le css postion: sticky; sur la carte --> Liste de cartes recherchées
+- Charger dans la base les nouvelles cartes échangeables
+- Lire/regarder théorie sur React
+  https://grafikart.fr/formations/react  
+
 ## Commande SQL pour insérer une nouvelle carte
 
 ```sql

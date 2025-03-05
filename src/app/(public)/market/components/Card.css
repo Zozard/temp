@@ -1,53 +1,51 @@
 /* From Uiverse.io by Samalander0 */ 
-.card {
-    width: 320px;
-    background: #ffaff4;
-    color: black;
-    position: relative;
-    border-radius: 2.5em;
-    padding: 1em;
-    transition: transform 0.4s ease;
-    margin: 1em;
-  }
+.market-card {
+
+  width: 320px;
+  background: #ffaff4;
+  color: black;
+  position: relative;
+  border-radius: 2.5em;
+  padding: 1em;
+  transition: transform 0.4s ease;
+  margin: 1em;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 5em;
+  height: 100%;
+  transition: transform 0.4s ease;
+
   
-  .card .card-content {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    gap: 5em;
-    height: 100%;
-    transition: transform 0.4s ease;
-  }
-  
-  .card .card-bottom {
+  .card-bottom {
     display: flex;
     justify-content: flex-end;
     flex-direction: column;
     align-items: flex-end;
 }
 
-  .card .card-top, .card .card-bottom {
+  .card-top, .card-bottom {
     display: flex;
     justify-content: space-between;
   }
   
-  .card .card-top p, .card .card-top .card-title, .card .card-bottom p, .card .card-bottom .card-title {
+  .card-top p, .card-top .card-title, .card-bottom p, .card-bottom .card-title {
     margin: 0;
   }
   
-  .card .card-title {
+  .card-title {
     font-size: 1.5em; /* Augmente la taille */
     font-weight: bold;
     text-align: center;
   }
   
-  .card .card-top p, .card .card-bottom p {
+  .card-top p, .card-bottom p {
     font-weight: 600;
   }
   
 
   
-  .card .card-image {
+  .card-image {
     position: absolute;
     width: 100%;
     height: 100%;
@@ -58,25 +56,27 @@
     pointer-events: none;
   }
   
-  .card .card-image svg {
+  .card-image svg {
     width: 4em;
     height: 4em;
     transition: transform 0.4s ease;
   }
   
-  .card:hover {
+  &:hover {
     cursor: pointer;
     transform: scale(0.97);
   }
   
-  .card:hover .card-content {
+  &:hover .card-content {
     transform: scale(0.96);
   }
   
-  .card:hover .card-image svg {
+  &:hover .card-image svg {
     transform: scale(1.05);
   }
   
-  .card:active {
+  &:active {
     transform: scale(0.9);
   }
+
+}

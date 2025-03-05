@@ -3,17 +3,16 @@
 import { useEffect, useState, useMemo } from "react";
 import { Card, loadAllCards, updateToBuy, updateToSell } from "./mycards";
 import "./card.css";
-import { useUser } from "../useUser";
 import { Modal } from "./Modal";
 import { CardDisplay } from "./CardDisplay";
+import { useAuthenticatedUser } from "../hooks/useAuthenticatedUser";
 
 export default function MyCardsPage() {
   const [allCards, setAllCards] = useState<Card[]>([]);
   // toggle links for restricting which cards we display : all cards or just my cards to sell / to give
   const [cardFilter, setCardFilter] = useState(false);
   const [selectedCard, setSelectedCard] = useState<Card | null>(null);
-  // État pour stocker la quantité lors de l'ouverture de la modale
-  const user = useUser();
+  const user = useAuthenticatedUser();
 
   // Effet qui se déclenche quand une carte est sélectionnée
   // useEffect(() => {
@@ -28,16 +27,9 @@ export default function MyCardsPage() {
   //   fetchQuantity();
   //  }, [selectedCard]); // L'effet se relance si selectedCard change
 
-  // pas propre mais pas trouvé d'autre solution pour le moment
-  // problème de user ou user.email can be null
-  let email: string | undefined = user?.email;
-  if (email === undefined) {
-    email = "g.zozine@gmail.com";
-  }
-
   // Effet pour filtrer les cartes affichées (se déclenche quand on clique sur les boutons en haut)
   useEffect(() => {
-    const allCardsPromise: Promise<Card[]> = loadAllCards(email);
+    const allCardsPromise: Promise<Card[]> = loadAllCards(user.email);
     allCardsPromise.then((cards) => {
       setAllCards(cards);
       console.log(cards);
@@ -51,9 +43,7 @@ export default function MyCardsPage() {
     console.log("Filtrage !");
     if (cardFilter) {
       return allCards.filter((card) => card.quantity_to_buy > 0 || card.quantity_to_sell > 0);
-    }
-    else
-    {
+    } else {
       return allCards;
     }
   }, [cardFilter, allCards]);
@@ -73,7 +63,7 @@ export default function MyCardsPage() {
     console.log("Saved");
 
     // préparation d'un nouvel objet déstiné à être utilisé dans le setter
-    const allCardsWithoutUpdatedOne = filteredCards.filter(
+    const allCardsWithoutUpdatedOne = allCards.filter(
       (card) => card.card_id !== selectedCard?.card_id
     );
     const updatedSelectedCard = {
@@ -90,7 +80,7 @@ export default function MyCardsPage() {
   };
 
   return (
-    <>
+    <div className="all-cards-page">
       <div className="cardSetSelector">
         <button className="toggle-button-cardSet" onClick={() => setCardFilter(false)}>
           All cards
@@ -106,14 +96,14 @@ export default function MyCardsPage() {
               cardId={card.card_id}
               quantityToSell={card.quantity_to_sell!}
               quantityToBuy={card.quantity_to_buy!}
+              showQuantityOverlay // on peut écrire les props booléens optionnels comme ça
               onCardClick={() => setSelectedCard(card)}
-              inModal={false}
             ></CardDisplay>
           </div>
         ))}
       </div>
       <Modal onClose={() => setSelectedCard(null)} card={selectedCard} onSave={onCardSave} />
-    </>
+    </div>
   );
 }
 

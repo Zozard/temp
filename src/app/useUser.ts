@@ -1,7 +1,7 @@
 "use client";
 
 import { jwtDecode } from "jwt-decode";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 // Interface pour typer les informations utilisateur Google
 interface GoogleUserInfo {
@@ -15,16 +15,13 @@ interface GoogleUserInfo {
 }
 
 export function useUser() {
-  const [token, setToken] = useState<string | null>(null);
+  const initialToken = window.localStorage.getItem("token");
+  const [token, setToken] = useState<string | null>(initialToken);
 
   const callback = () => {
     const token = window.localStorage.getItem("token");
     setToken(token);
   };
-
-  useEffect(() => {
-    callback();
-  }, []);
 
   useEffect(() => {
     window.addEventListener("storage", callback);
@@ -34,9 +31,13 @@ export function useUser() {
     };
   }, []);
 
-  if (token === null) {
-    return null;
-  }
+  const user = useMemo(() => {
+    if (token === null) {
+      return null;
+    }
 
-  return jwtDecode<GoogleUserInfo>(token);
+    return jwtDecode<GoogleUserInfo>(token);
+  }, [token]);
+
+  return user;
 }

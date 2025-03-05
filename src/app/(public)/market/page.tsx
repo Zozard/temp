@@ -1,7 +1,7 @@
 "use client";
 
-import Card from "@/components/Card";
-import CardContainer from "@/components/CardContainer";
+import Card from "@/app/(public)/market/components/Card";
+import CardContainer from "@/app/(public)/market/components/CardContainer";
 import { useEffect, useState } from "react";
 import {
   loadAllCardsToGive,
@@ -10,7 +10,7 @@ import {
   saveCardSearched,
   loadUserCard,
 } from "./saveprops";
-import { useUser } from "../useUser";
+import { useUser } from "../../useUser";
 
 export default function MarketPage() {
   const [cardToGive, setCardToGive] = useState("");

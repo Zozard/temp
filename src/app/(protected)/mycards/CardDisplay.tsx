@@ -9,7 +9,7 @@ type CardProps = {
   cardId: string;
   quantityToSell: number | null;
   quantityToBuy: number | null;
-  inModal: boolean;
+  showQuantityOverlay?: boolean;
   onCardClick?: () => void; // Ajout d'un gestionnaire de clic
 };
 
@@ -17,7 +17,7 @@ export function CardDisplay({
   cardId,
   quantityToSell,
   quantityToBuy,
-  inModal,
+  showQuantityOverlay,
   onCardClick,
 }: CardProps) {
   const trimLeftZeros = (str: string) => {
@@ -41,18 +41,18 @@ export function CardDisplay({
   const hasQuantity = (quantityToSell ?? 0) > 0 || (quantityToBuy ?? 0) > 0;
 
   return (
-    <>
+    <div className="card-wrapper">
       <div className={`card-quantity-container ${hasQuantity ? "has-quantity" : ""}`}>
         <img
           loading="lazy"
           src={`https://www.media.pokekalos.fr/img/jeux/pocket/extensions/${cardExtension}/${cardNumber}.png`}
           onClick={onCardClick}
         />
-        {!inModal && (
-          <QuantityDisplay quantityToBuy={quantityToBuy} quantityToSell={quantityToSell} />
-        )}
       </div>
-    </>
+      {showQuantityOverlay && (
+        <QuantityDisplay quantityToBuy={quantityToBuy} quantityToSell={quantityToSell} />
+      )}
+    </div>
   );
 }
 
@@ -67,11 +67,9 @@ function QuantityDisplay({ quantityToBuy, quantityToSell }: QuantityDisplayProps
   }
 
   return (
-    <div className="quantity-wrapper">
-      <div className="quantity-display">
-        {quantityToSell > 0 && <div className="quantity-sell">À donner : {quantityToSell}</div>}
-        {quantityToBuy > 0 && <div className="quantity-buy">Recherchées : {quantityToBuy}</div>}
-      </div>
+    <div className="quantity-display">
+      {quantityToSell > 0 && <div className="quantity-sell">À donner : {quantityToSell}</div>}
+      {quantityToBuy > 0 && <div className="quantity-buy">Recherchées : {quantityToBuy}</div>}
     </div>
   );
 }
