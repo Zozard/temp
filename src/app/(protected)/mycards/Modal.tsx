@@ -1,6 +1,6 @@
 "use client";
 
-import { Card } from "./mycards";
+import { Card } from "../../types/Card";
 import { CardDisplay } from "./CardDisplay";
 import { useState } from "react";
 import "./Modal.css";
