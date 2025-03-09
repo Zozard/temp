@@ -1,15 +1,7 @@
 "use server";
 
 import { initDatabase } from "@/actions/database";
-
-export type Card = {
-  id: number;
-  card_id: string;
-  card_name: string;
-  rarity: string;
-  quantity_to_sell: number;
-  quantity_to_buy: number;
-};
+import { Card } from '../../types/Card';
 
 export async function loadAllCards(email: string): Promise<Card[]> {
   const client = await initDatabase();
