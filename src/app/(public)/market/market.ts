@@ -1,6 +1,5 @@
 "use client";
 
-import { initDatabase } from "@/actions/database";
 import { Card } from "../../types/Card";
 
 export type MatchingOffer = {
