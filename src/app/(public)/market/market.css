@@ -1,0 +1,23 @@
+.market {
+    display: grid;
+    width: 100%;
+    gap: 10px;
+  }
+  
+  .market-line {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas: "card data";
+    width: 100%;
+  }
+  
+  .market-card {
+    grid-area: card;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .market-data {
+    grid-area: data;
+  }
