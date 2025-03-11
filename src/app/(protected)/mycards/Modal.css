@@ -10,6 +10,7 @@
     gap: 20px;
     height: 400px; /* Hauteur fixe ou ajustez selon vos besoins */
     width: 100%;
+    user-select: text;
   }
 
   .modal-card {

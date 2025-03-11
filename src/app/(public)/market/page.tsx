@@ -17,6 +17,7 @@ export type Offer = {
   card_name: string;
   rarity: string;
   email: string;
+  pseudo: string;
   quantity_to_sell: number;
   quantity_to_buy: number;
 };
@@ -60,11 +61,11 @@ export function findMatches(buyerEmail: string, offers: Offer[]): MatchingOffer[
               quantity_to_sell: 0,
               quantity_to_buy: buyerOffer.quantity_to_buy,
             },
-            sellers: [{ pseudo: sellerOffer.email, quantity: sellerOffer.quantity_to_sell }],
+            sellers: [{ pseudo: sellerOffer.pseudo, quantity: sellerOffer.quantity_to_sell }],
           });
         } else {
           // si elle y est, on rajoute juste un seller
-          const newSeller = { pseudo: sellerOffer.email, quantity: sellerOffer.quantity_to_sell };
+          const newSeller = { pseudo: sellerOffer.pseudo, quantity: sellerOffer.quantity_to_sell };
           const offerIndex = matches.findIndex(
             (offer) => offer.card.card_id === buyerOffer.card_id
           );
@@ -87,6 +88,7 @@ export default function Market() {
       card_name: "Pikachu",
       rarity: "Common",
       email: "g.zozine@gmail.com",
+      pseudo: "Jochbar",
       quantity_to_sell: 0,
       quantity_to_buy: 3,
     },
@@ -96,6 +98,7 @@ export default function Market() {
       card_name: "Dracaufeu",
       rarity: "Rare",
       email: "g.zozine@gmail.com",
+      pseudo: "Jochbar",
       quantity_to_sell: 0,
       quantity_to_buy: 2,
     },
@@ -105,6 +108,7 @@ export default function Market() {
       card_name: "Mewtwo",
       rarity: "Legendary",
       email: "g.zozine@gmail.com",
+      pseudo: "Jochbar",
       quantity_to_sell: 0,
       quantity_to_buy: 2,
     },
@@ -114,6 +118,7 @@ export default function Market() {
       card_name: "Pikachu",
       rarity: "Common",
       email: "remy.duval@hotmail.com",
+      pseudo: "RémiLeCon",
       quantity_to_sell: 5,
       quantity_to_buy: 0,
     },
@@ -123,6 +128,7 @@ export default function Market() {
       card_name: "Dracaufeu",
       rarity: "Rare",
       email: "sophie.marchand@yahoo.fr",
+      pseudo: "Sophie",
       quantity_to_sell: 3,
       quantity_to_buy: 0,
     },
@@ -132,6 +138,7 @@ export default function Market() {
       card_name: "Kamek",
       rarity: "Rare",
       email: "sophie.marchand@yahoo.fr",
+      pseudo: "Sophie",
       quantity_to_sell: 3,
       quantity_to_buy: 0,
     },
@@ -141,6 +148,7 @@ export default function Market() {
       card_name: "Mewtwo",
       rarity: "Legendary",
       email: "sophie.marchand@yahoo.fr",
+      pseudo: "Sophie",
       quantity_to_sell: 2,
       quantity_to_buy: 0,
     },
@@ -150,6 +158,7 @@ export default function Market() {
       card_name: "Mewtwo",
       rarity: "Legendary",
       email: "josé.marchand@yahoo.fr",
+      pseudo: "José",
       quantity_to_sell: 2,
       quantity_to_buy: 0,
     },
@@ -159,6 +168,7 @@ export default function Market() {
       card_name: "Mewtwo",
       rarity: "Legendary",
       email: "samy@gmail.com",
+      pseudo: "Samy",
       quantity_to_sell: 2,
       quantity_to_buy: 0,
     },

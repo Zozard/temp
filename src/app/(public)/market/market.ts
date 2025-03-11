@@ -14,6 +14,7 @@ export type Offer = {
   card_name: string;
   rarity: string;
   email: string;
+  pseudo: string;
   quantity_to_sell: number;
   quantity_to_buy: number;
 };
@@ -83,12 +84,13 @@ export async function loadAllOffers(): Promise<Offer[]> {
       cards.card_name,
       cards.rarity,
       users.email,
+      users.pseudo,
       SUM(CASE WHEN user_cards.direction = 'BUY' THEN user_cards.quantity ELSE 0 END) AS quantity_to_buy,
       SUM(CASE WHEN user_cards.direction = 'SELL' THEN user_cards.quantity ELSE 0 END) AS quantity_to_sell
     FROM cards
     JOIN user_cards ON cards.id = user_cards.card_id
     JOIN users on users.id = user_cards.user_id
-    GROUP BY cards.id, cards.card_id, cards.card_name, cards.rarity, users.email
+    GROUP BY cards.id, cards.card_id, cards.card_name, cards.rarity, users.email, users.pseudo
     ORDER BY cards.card_id`
   );
 
