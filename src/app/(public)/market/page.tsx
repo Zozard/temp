@@ -1,7 +1,7 @@
 "use client";
 
 import { Trade, loadMyMatches } from "./market";
-import { Fragment, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { CardDisplay } from "@/app/(protected)/mycards/CardDisplay";
 import { useAuthenticatedUser } from "@/app/(protected)/hooks/useAuthenticatedUser";
 import "./market.css";
