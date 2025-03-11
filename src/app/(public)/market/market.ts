@@ -1,4 +1,4 @@
-"use server"
+"use server";
 
 import { Card } from "../../types/Card";
 import { initDatabase } from "@/actions/database";
@@ -17,6 +17,14 @@ export type Offer = {
   pseudo: string;
   quantity_to_sell: number;
   quantity_to_buy: number;
+};
+
+export type Trade = {
+  card_to_sell: string;
+  card_to_buy: string;
+  card_rarity: string;
+  trade_partner_email: string;
+  trade_partner_pseudo: string;
 };
 
 /*
@@ -92,6 +100,56 @@ export async function loadAllOffers(): Promise<Offer[]> {
     JOIN users on users.id = user_cards.user_id
     GROUP BY cards.id, cards.card_id, cards.card_name, cards.rarity, users.email, users.pseudo
     ORDER BY cards.card_id`
+  );
+
+  return res.rows;
+}
+
+//
+export async function loadMyMatches(email: string): Promise<Trade[]> {
+  const client = await initDatabase();
+
+  const res_id = await client.query<{ id: number }>("select id from users where email =$1", [
+    email,
+  ]);
+
+  if (res_id.rowCount !== 1) {
+    throw new Error("Something Wrong happened!!");
+  }
+
+  const res = await client.query<Trade>(
+    `WITH sellers AS
+  (SELECT buyer_cards.card_id,
+          uc_sellers.user_id,
+          buyer_cards.rarity
+   FROM cards AS buyer_cards
+   INNER JOIN user_cards uc_buyer ON uc_buyer.card_id = buyer_cards.id
+   INNER JOIN user_cards uc_sellers ON uc_sellers.card_id = uc_buyer.card_id
+   AND uc_sellers.direction = 'SELL'
+   WHERE uc_buyer.user_id = $1
+     AND uc_buyer.direction = 'BUY'
+     AND uc_sellers.user_id != $1),
+     buyers AS
+  (SELECT buyer_cards.card_id,
+          uc_sellers.user_id,
+          buyer_cards.rarity
+   FROM cards AS buyer_cards
+   INNER JOIN user_cards uc_buyer ON uc_buyer.card_id = buyer_cards.id
+   INNER JOIN user_cards uc_sellers ON uc_sellers.card_id = uc_buyer.card_id
+   AND uc_sellers.direction = 'BUY'
+   WHERE uc_buyer.user_id = $1
+     AND uc_buyer.direction = 'SELL'
+     AND uc_sellers.user_id != $1)
+SELECT sellers.card_id AS card_to_sell,
+       buyers.card_id AS card_to_buy,
+       sellers.rarity AS card_rarity,
+       users.email AS trade_partner_email,
+       users.pseudo AS trade_partner_pseudo
+FROM sellers
+INNER JOIN buyers ON sellers.user_id = buyers.user_id
+INNER JOIN users ON sellers.user_id = users.id
+AND sellers.rarity = buyers.rarity`,
+    [res_id.rows[0].id]
   );
 
   return res.rows;

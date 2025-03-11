@@ -1,35 +1,29 @@
-.market {
-    display: grid;
-    width: 100%;
-    gap: 10px;
-  }
-  
-  .market-line {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-areas: "card data";
-    width: 100%;
-  }
-  
-  .market-card {
-    position: relative;
-    grid-area: card;
-    left: 50%;
-    display: flex;
-    height: 400px;
-    align-items: center;
-    user-select: none;
-  }
-  
-  .market-card img {
-    width: 70%;
-    height: auto;
-    align-self: center;
-    user-select: none;
+.trade {
+  display: grid;
+  justify-items: center;
+  align-items: center;
+  grid-template-areas:
+    "mine arrows offer"
+    "me . partner";
 }
 
-  .market-data {
-    grid-area: data;
-    position: relative;
-    top: 50%;
-  }
+.mine {
+  grid-area: mine;
+}
+
+.arrows {
+  grid-area: arrows;
+  font-size: 80px;
+}
+
+.offer {
+  grid-area: offer;
+}
+
+.partner {
+  grid-area: partner;
+}
+
+.me {
+  grid-area: me;
+}
