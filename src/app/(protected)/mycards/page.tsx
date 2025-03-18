@@ -1,112 +1,111 @@
 "use client";
 
-import { useEffect, useState, useMemo } from "react";
-import { loadAllCards, updateToBuy, updateToSell } from "./mycards";
-import { Card } from "../../types/Card"
+import dynamic from 'next/dynamic';
+import { useEffect, useState } from "react";
+import {
+  loadAllCards,
+  saveCardState,
+} from "./mycards";
+import { Card } from "../../types/Card";
 import "./card.css";
-import { Modal } from "./Modal";
 import { CardDisplay } from "./CardDisplay";
 import { useAuthenticatedUser } from "../hooks/useAuthenticatedUser";
 
-export default function MyCardsPage() {
-  const [allCards, setAllCards] = useState<Card[]>([]);
-  // toggle links for restricting which cards we display : all cards or just my cards to sell / to give
-  const [cardFilter, setCardFilter] = useState(false);
-  const [selectedCard, setSelectedCard] = useState<Card | null>(null);
+type Direction = "BUY" | "SELL" | undefined;
+
+function Page() {
   const user = useAuthenticatedUser();
 
-  // Effet qui se déclenche quand une carte est sélectionnée
-  // useEffect(() => {
-  // Si une carte est sélectionnée, on charge sa quantité
-  //   async function fetchQuantity() {
-  //   if (selectedCard && user!.email) {
-  //      const result = await loadUserCardQuantity(user!.email, selectedCard.card_id);
-  //     console.log('result='+result)
-  //       setQuantity(result);
-  //     }
-  //  }
-  //   fetchQuantity();
-  //  }, [selectedCard]); // L'effet se relance si selectedCard change
+  const [allCards, setAllCards] = useState<Card[]>([]);
+  const [cardSelection, setCardSelection] = useState<{
+    [key: number]: Direction;
+  }>({});
+
+  // const [cardsToSell, setCardsToSell] = useState(new Set<string>());
+  // const [cardsToBuy, setCardsToBuy] = useState(new Set<string>());
 
   // Effet pour filtrer les cartes affichées (se déclenche quand on clique sur les boutons en haut)
   useEffect(() => {
     const allCardsPromise: Promise<Card[]> = loadAllCards(user.email);
     allCardsPromise.then((cards) => {
       setAllCards(cards);
-      console.log(cards);
-      console.log(cards[26]);
+      setCardSelection(
+        Object.fromEntries(
+          cards.map((card) => [
+            card.id,
+            card.quantity_to_buy > 0
+              ? "BUY"
+              : card.quantity_to_sell > 0
+              ? "SELL"
+              : undefined,
+          ])
+        )
+      );
     });
   }, []);
 
-  console.log(allCards.filter((card) => card.quantity_to_buy > 0 || card.quantity_to_sell > 0));
-
-  const filteredCards = useMemo(() => {
-    console.log("Filtrage !");
-    if (cardFilter) {
-      return allCards.filter((card) => card.quantity_to_buy > 0 || card.quantity_to_sell > 0);
-    } else {
-      return allCards;
-    }
-  }, [cardFilter, allCards]);
-
-  const onCardSave = async (quantityToSell: number, quantityToBuy: number) => {
-    if (selectedCard === null) {
-      throw new Error("No card was selected, something wrong happened");
-    }
-
-    console.log({ selectedCard, quantityToBuy, quantityToSell });
-    // console.log(quantityToBuy);
-    // console.log(quantityToSell);
-
-    const cardToSellPromise = updateToSell(selectedCard.card_id, user!.email, quantityToSell);
-    const cardToBuyPromise = updateToBuy(selectedCard.card_id, user!.email, quantityToBuy);
-    await Promise.all([cardToBuyPromise, cardToSellPromise]);
-    console.log("Saved");
-
-    // préparation d'un nouvel objet déstiné à être utilisé dans le setter
-    const allCardsWithoutUpdatedOne = allCards.filter(
-      (card) => card.card_id !== selectedCard?.card_id
-    );
-    const updatedSelectedCard = {
-      ...selectedCard,
-      quantity_to_buy: quantityToBuy,
-      quantity_to_sell: quantityToSell,
-    };
-    const updatedAllCards = [...allCardsWithoutUpdatedOne, updatedSelectedCard].sort((a, b) =>
-      a.card_id.localeCompare(b.card_id)
-    );
-    setAllCards(updatedAllCards);
-
-    setSelectedCard(null);
+  const save = () => {
+    saveCardState(user.email, cardSelection);
   };
+
+  const setSelection = (
+    id: number,
+    state: Direction
+  ): void => {
+    const currentState = cardSelection[id];
+    if (currentState === state) {
+      const updatedCardSelection = { ...cardSelection, [id]: undefined };
+      setCardSelection(updatedCardSelection);
+      return;
+    }
+
+    const updatedCardSelection = { ...cardSelection, [id]: state };
+    setCardSelection(updatedCardSelection);
+  };
+
+  const setAllDirections = (direction: Direction) => {
+    const updatedCardSelection = Object.fromEntries(Object.entries(cardSelection).map(([cardId]): [string, Direction] => [cardId, direction]));
+    setCardSelection(updatedCardSelection);
+  }
 
   return (
     <div className="all-cards-page">
       <div className="cardSetSelector">
-        <button className="toggle-button-cardSet" onClick={() => setCardFilter(false)}>
-          All cards
+      <button className="toggle-button-cardSet" onClick={() => setAllDirections("SELL")}>
+          Offer all
         </button>
-        <button className="toggle-button-cardSet" onClick={() => setCardFilter(true)}>
-          My Cards
+        <button className="toggle-button-cardSet" onClick={() => setAllDirections("BUY")}>
+          Look for all
+        </button>
+        <button className="toggle-button-cardSet" onClick={() => setAllDirections(undefined)}>
+          Clear
+        </button>
+        <button className="toggle-button-cardSet" onClick={save}>
+          Save
         </button>
       </div>
       <div className="card-container">
-        {filteredCards.map((card) => (
-          <div key={card.card_id} className="card">
+        {allCards.map((card) => (
+          <div key={card.id} className="card">
             <CardDisplay
               cardId={card.card_id}
-              quantityToSell={card.quantity_to_sell!}
-              quantityToBuy={card.quantity_to_buy!}
-              showQuantityOverlay // on peut écrire les props booléens optionnels comme ça
-              onCardClick={() => setSelectedCard(card)}
+              quantityToSell={null}
+              quantityToBuy={null}
+              editMode
+              selectedMode={cardSelection[card.id]}
+              setSell={() => setSelection(card.id, "SELL")}
+              setBuy={() => setSelection(card.id, "BUY")}
             ></CardDisplay>
           </div>
         ))}
       </div>
-      <Modal onClose={() => setSelectedCard(null)} card={selectedCard} onSave={onCardSave} />
     </div>
   );
 }
+
+export default dynamic(() => Promise.resolve(Page), {
+  ssr: false,
+});
 
 // Ondine - A1-220
 // /_next/image?url=%2Fimages%2Fgame%2Fcard%2Ffull%2Ffr%2FTR_10_000120_00.png&w=640&q=75 640w

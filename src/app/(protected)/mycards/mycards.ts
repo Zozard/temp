@@ -120,3 +120,33 @@ export async function updateToBuy(card_id: string, email: string, quantity: numb
     return "y a rien";
   }
 }
+
+export async function saveCardState(email: string, state: { [key: string]: "BUY" | "SELL" | undefined }){
+  const client = await initDatabase();
+   
+  const res = await client.query<{ id: number }>("SELECT id FROM users WHERE email = $1", [email]);
+  if (res.rows.length !== 1) {
+    // User not found / or multiple users? o_O
+    throw new Error("User not found");
+  }
+
+  const userId = res.rows[0].id;
+
+  await client.query(
+    "DELETE FROM user_cards WHERE user_id = $1", [userId]
+  );
+
+  console.log({state});
+
+  const valuesToInsert = Object.entries(state)
+    .filter(([, direction]) => direction !== undefined)
+    .map(([cardId, direction]) => {
+      return `(${userId}, ${cardId}, '${direction}', 1)`;
+    });
+
+  console.log({ values: valuesToInsert.join(',') })
+
+  await client.query(
+    `INSERT INTO user_cards (user_id, card_id, direction, quantity) VALUES ${valuesToInsert.join(',')}`
+  );
+}

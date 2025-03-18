@@ -17,14 +17,10 @@
     }
 
     .card {
+        position: relative;
         width: 300px;
         transition: transform 0.25s ease;
-        cursor: pointer;
-
-        &:hover{
-            transform: scale(0.97);
-        }
-        
+        cursor: pointer;       
     }
 
     img {
@@ -59,6 +55,48 @@
         user-select: none;
     }
 
+    .edit-selection {
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        position: absolute;
+        display: grid;
+        
+        grid-template-columns: 50% 50%;
+
+        .direction-overlay {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px white, -1px 1px 2px white, 1px -1px 2px white, -1px -1px 2px white;
+
+            &:hover {
+                background-color: rgba(200, 200, 200, 0.3);
+
+                .action-button{
+                    transform: scale(0.93);
+                }
+            }
+            
+        }
+
+        .direction-overlay.unchecked {
+            background-color: rgba(0, 0, 0, 0.5);
+
+            &:hover {
+                background-color: rgba(0, 0, 0, 0.3);
+            }
+        }
+
+        .action-button {
+            padding: 5px 10px;
+            background-color: white;
+            border-radius: 4px;
+        }
+    }
+
     .quantity-display:empty{
         display: none;
     }
@@ -69,6 +107,12 @@
 
     .quantity-buy {
         color: rgba(34, 16, 228, 0.842);
+    }
+
+    .edit-container{
+        position: absolute;
+        top: 0;
+        right: 0;
     }
 
 }

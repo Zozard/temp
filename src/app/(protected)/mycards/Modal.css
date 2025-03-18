@@ -34,7 +34,7 @@
     align-self: end; /* Aligne en bas */
   }
 
-  input {
+  .modal-input-container input {
     width: 25%;
     align-self: center;
     text-align: center;

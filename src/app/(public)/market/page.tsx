@@ -1,12 +1,13 @@
 "use client";
 
+import dynamic from 'next/dynamic';
 import { Trade, loadMyMatches } from "./market";
 import { useEffect, useState } from "react";
 import { CardDisplay } from "@/app/(protected)/mycards/CardDisplay";
 import { useAuthenticatedUser } from "@/app/(protected)/hooks/useAuthenticatedUser";
 import "./market.css";
 
-export default function Market() {
+function Market() {
   const [trades, setTrades] = useState<Trade[]>([]);
   const user = useAuthenticatedUser();
 
@@ -33,3 +34,8 @@ export default function Market() {
     </div>
   );
 }
+
+
+export default dynamic(() => Promise.resolve(Market), {
+  ssr: false,
+});

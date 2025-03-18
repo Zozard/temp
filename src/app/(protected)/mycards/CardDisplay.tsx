@@ -10,16 +10,20 @@ type CardProps = {
   cardId: string;
   quantityToSell: number | null;
   quantityToBuy: number | null;
-  showQuantityOverlay?: boolean;
-  onCardClick?: () => void; // Ajout d'un gestionnaire de clic
+  editMode?: boolean;
+  selectedMode?: "BUY" | "SELL" | undefined;
+  setSell?: () => void;
+  setBuy?: () => void;
 };
 
 export function CardDisplay({
   cardId,
   quantityToSell,
   quantityToBuy,
-  showQuantityOverlay,
-  onCardClick,
+  selectedMode,
+  editMode,
+  setSell,
+  setBuy,
 }: CardProps) {
   const trimLeftZeros = (str: string) => {
     while (str.startsWith("0")) {
@@ -39,38 +43,39 @@ export function CardDisplay({
   const cardNumber = trimLeftZeros(rawCardNumber);
   const cardExtension = extensionToUrl[rawCardExtension];
 
-  const hasQuantity = (quantityToSell ?? 0) > 0 || (quantityToBuy ?? 0) > 0;
-
   return (
     <div className="card-wrapper">
-      <div className={`card-quantity-container ${hasQuantity ? "has-quantity" : ""}`}>
+      <div className="card-quantity-container">
         <img
           loading="lazy"
           src={`https://www.media.pokekalos.fr/img/jeux/pocket/extensions/${cardExtension}/${cardNumber}.png`}
-          onClick={onCardClick}
         />
       </div>
-      {showQuantityOverlay && (
-        <QuantityDisplay quantityToBuy={quantityToBuy} quantityToSell={quantityToSell} />
-      )}
-    </div>
-  );
-}
 
-interface QuantityDisplayProps {
-  quantityToSell: number;
-  quantityToBuy: number;
-}
-
-function QuantityDisplay({ quantityToBuy, quantityToSell }: QuantityDisplayProps) {
-  if (quantityToSell === 0 && quantityToBuy === 0) {
-    return null;
-  }
-
-  return (
-    <div className="quantity-display">
-      {quantityToSell > 0 && <div className="quantity-sell">À donner : {quantityToSell}</div>}
-      {quantityToBuy > 0 && <div className="quantity-buy">Recherchées : {quantityToBuy}</div>}
+      {editMode ? (
+        <div className="edit-selection">
+          <div
+            className={`direction-overlay ${
+              selectedMode === "BUY" ? "unchecked" : ""
+            }`}
+            onClick={() => setSell?.()}
+          >
+            <div className="action-button">
+              Offer {selectedMode === "SELL" ? "✓" : ""}
+            </div>
+          </div>
+          <div
+            className={`direction-overlay ${
+              selectedMode === "SELL" ? "unchecked" : ""
+            }`}
+            onClick={() => setBuy?.()}
+          >
+            <div className="action-button">
+              Look for {selectedMode === "BUY" ? "✓" : ""}
+            </div>
+          </div>
+        </div>
+      ) : null}
     </div>
   );
 }

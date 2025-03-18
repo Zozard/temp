@@ -15,6 +15,10 @@ interface GoogleUserInfo {
 }
 
 export function useUser() {
+  if (typeof window === "undefined") {
+    throw new Error("Not a browser context")
+  }
+
   const initialToken = window.localStorage.getItem("token");
   const [token, setToken] = useState<string | null>(initialToken);
 
