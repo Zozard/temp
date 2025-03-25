@@ -71,8 +71,8 @@ const filteredCards = useMemo( () => {
 const toggleRarityFilter = (rarity: string) => {
   setRarityFilter(prevFilter => 
     prevFilter.includes(rarity)
-      ? prevFilter.filter(item => item !== rarity)
-      : [...prevFilter, rarity]
+      ? prevFilter.filter(item => item !== rarity) // on filtre avec tout sauf la rarity selectionnée
+      : [...prevFilter, rarity] // on rajoute la rarity dans le tableau 
   );
 };
 
