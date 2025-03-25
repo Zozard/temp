@@ -112,8 +112,8 @@ button {
   padding: 12px 20px;
   font-size: 1.1em;
   font-weight: bold;
-  background: #6200ea;
-  color: white;
+ /* background: #6200ea;
+  color: white; */
   border: none;
   border-radius: 8px;
   cursor: pointer;

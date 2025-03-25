@@ -1,7 +1,7 @@
 "use client";
 
 import dynamic from 'next/dynamic';
-import { useEffect, useState } from "react";
+import { useMemo, useEffect, useState } from "react";
 import {
   loadAllCards,
   saveCardState,
@@ -17,6 +17,13 @@ function Page() {
   const user = useAuthenticatedUser();
 
   const [allCards, setAllCards] = useState<Card[]>([]);
+  const [cardFilter, setCardFilter] = useState(false);
+
+  const [rarityFilter, setRarityFilter] = useState<string[]>([
+    "⬧", "⬧⬧", "⬧⬧⬧", "⬧⬧⬧⬧",
+    "★", "★★", "★★★", "👑"
+  ]);
+
   const [cardSelection, setCardSelection] = useState<{
     [key: number]: Direction;
   }>({});
@@ -44,6 +51,33 @@ function Page() {
     });
   }, []);
 
+  //   const filteredCards = useMemo(() => {
+//     console.log("Filtrage !");
+//     if (cardFilter) {
+//       return allCards.filter(
+//         (card) => card.quantity_to_buy > 0 || card.quantity_to_sell > 0
+//       );
+//     } else {
+//       return allCards;
+//     }
+//   }, [cardFilter, allCards]);
+
+const filteredCards = useMemo( () => {
+    return allCards.filter(
+      (card) => rarityFilter.includes(card.rarity))
+    }
+, [rarityFilter, allCards]);
+
+
+const toggleRarityFilter = (rarity: string) => {
+  setRarityFilter(prevFilter => 
+    prevFilter.includes(rarity)
+      ? prevFilter.filter(item => item !== rarity)
+      : [...prevFilter, rarity]
+  );
+};
+
+
   const save = () => {
     saveCardState(user.email, cardSelection);
     console.log(cardSelection);
@@ -65,13 +99,49 @@ function Page() {
   };
 
   const setAllDirections = (direction: Direction) => {
-    const updatedCardSelection = Object.fromEntries(Object.entries(cardSelection).map(([cardId]): [string, Direction] => [cardId, direction]));
+    // ne doit impacter que les cartes du filtre actuel
+    // = uniquement les ID des cartes filtrées
+    const filteredCardIds = filteredCards.map(card => card.id);
+  
+    // On applique le changement de direction uniquement aux cartes filtrées  
+    const filteredCardSelection = Object.fromEntries(
+      Object.entries(cardSelection)
+        .filter(([cardId]) => filteredCardIds.includes(Number(cardId)))
+        .map(([cardId]): [string, Direction] => [cardId, direction])
+    );
+    
+    // on merge les changements sur les cartes filtrées 
+    // avec les états des cartes pas filtrées 
+    // a noter que l'ordre du spread est important
+    // filterCards écrase les valeurs de cardSelection
+    const updatedCardSelection = {
+      ...cardSelection,
+      ...filteredCardSelection
+    }
+   
     setCardSelection(updatedCardSelection);
   }
 
   return (
     <div className="all-cards-page">
+
       <div className="cardSetSelector">
+      <div>
+    {[
+      "⬧", "⬧⬧", "⬧⬧⬧", "⬧⬧⬧⬧",
+      "★", "★★", "★★★", "👑"
+    ].map((rarity) => (
+      <button 
+        key={rarity}
+        onClick={() => toggleRarityFilter(rarity)}
+        className={`toggle-button-cardSet ${rarityFilter.includes(rarity) ? 'active' : ''}`}
+        >
+        {rarity}
+      </button>
+    ))}
+  </div>
+</div>
+  <div className='mass-selection'>
       <button className="toggle-button-cardSet" onClick={() => setAllDirections("SELL")}>
           Offer all
         </button>
@@ -86,7 +156,7 @@ function Page() {
         </button>
       </div>
       <div className="card-container">
-        {allCards.map((card) => (
+        {filteredCards.map((card) => (
           <div key={card.id} className="card">
             <CardDisplay
               cardId={card.card_id}

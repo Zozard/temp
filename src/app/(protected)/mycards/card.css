@@ -33,9 +33,20 @@
         justify-content: center;
     }
 
+    .mass-selection {
+        display: flex;
+        align-items: baseline;
+        justify-content: center;
+    }
+
     .toggle-button-cardSet {
         margin: 20px;
     }
+
+    .toggle-button-cardSet.active {
+        background-color: blue;
+        color: white;
+      }
 
     .quantity-display {
         position: absolute;
