@@ -17,7 +17,6 @@ function Page() {
   const user = useAuthenticatedUser();
 
   const [allCards, setAllCards] = useState<Card[]>([]);
-  const [cardFilter, setCardFilter] = useState(false);
 
   const [rarityFilter, setRarityFilter] = useState<string[]>([
     "⬧", "⬧⬧", "⬧⬧⬧", "⬧⬧⬧⬧",
