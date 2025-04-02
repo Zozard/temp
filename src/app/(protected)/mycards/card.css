@@ -42,6 +42,12 @@
     .toggle-button-cardSet {
         margin: 20px;
     }
+    
+    .toggle-button-cardSet.saving {
+        background-color: #ccc;
+        cursor: not-allowed;
+        position: relative;
+      }
 
     .toggle-button-cardSet.active {
         background-color: blue;
