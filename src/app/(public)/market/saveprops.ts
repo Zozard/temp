@@ -31,7 +31,7 @@ async function loadCardId(client: Client, cardId: string): Promise<number> {
 export async function loadUserCard(
   userCardId: number
 ): Promise<{ card_name: string; pseudo: string }[]> {
-  const client = await initDatabase();
+  const {client, close} = await initDatabase();
 
   const res = await client.query<{ card_name: string; pseudo: string }>(
     "SELECT card_name, pseudo FROM user_cards join cards on cards.id = user_cards.card_id join users on users.id = user_cards.user_id WHERE user_cards.id = $1",
@@ -42,12 +42,13 @@ export async function loadUserCard(
     // User_Card not found / Or multiple User_Card o_O
     throw new Error("User_Card not found");
   }
+  await close();
 
   return res.rows;
 }
 
 export async function saveCardToGive(email: string, cardId: string): Promise<number> {
-  const client = await initDatabase();
+  const {client, close} = await initDatabase();
 
   const [userId, internalCardId] = await Promise.all([
     loadUserId(client, email),
@@ -60,12 +61,14 @@ export async function saveCardToGive(email: string, cardId: string): Promise<num
   );
   await client.end();
 
+  await close();
+
   // RETURNING * retourne la ligne insérée et ses attributs, dont l'id technique (id)
   return res.rows[0].id;
 }
 
 export async function loadAllCardsToGive(): Promise<{ card_name: string; pseudo: string }[]> {
-  const client = await initDatabase();
+  const {client, close} = await initDatabase();
 
   const res = await client.query<{ card_name: string; pseudo: string }>(
     "select card_name, pseudo from user_cards join cards on cards.id = user_cards.card_id join users on users.id = user_cards.user_id where direction = 'SELL'"
@@ -75,6 +78,9 @@ export async function loadAllCardsToGive(): Promise<{ card_name: string; pseudo:
     // No cards to give in database
     throw new Error("No cards to give in database");
   }
+
+  await close();
+
 
   return res.rows;
 }
