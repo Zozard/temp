@@ -8,8 +8,6 @@ import "./card.css";
 import { useAuthenticatedUser } from "../hooks/useAuthenticatedUser";
 import { Extension } from "./Extension";
 
-type Direction = "BUY" | "SELL" | undefined;
-
 function Page() {
   const user = useAuthenticatedUser();
 
