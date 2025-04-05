@@ -1,0 +1,21 @@
+.accordion {
+
+    .accordion-header {
+        cursor: pointer;
+        user-select: none;
+        margin: 0 30px;
+        border-top: 1px solid grey;
+    }
+
+    .accordion-content {
+        
+    }
+
+    .accordion-content.open {
+        display: block;        
+    }
+
+    .accordion-content.hidden {
+        display: none;        
+    }
+}

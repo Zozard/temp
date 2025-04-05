@@ -11,7 +11,7 @@ type CardProps = {
   quantityToSell: number | null;
   quantityToBuy: number | null;
   editMode?: boolean;
-  selectedMode?: "BUY" | "SELL" | undefined;
+  selectedMode?: "BUY" | "SELL" | null;
   setSell?: () => void;
   setBuy?: () => void;
 };
