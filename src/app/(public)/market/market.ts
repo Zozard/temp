@@ -83,7 +83,7 @@ export function findMatches(buyerEmail: string, offers: Offer[]): MatchingOffer[
 */
 
 export async function loadAllOffers(): Promise<Offer[]> {
-  const client = await initDatabase();
+  const {client, close} = await initDatabase();
 
   const res = await client.query<Offer>(
     `SELECT
@@ -102,12 +102,15 @@ export async function loadAllOffers(): Promise<Offer[]> {
     ORDER BY cards.card_id`
   );
 
+  await close();
+
+
   return res.rows;
 }
 
 //
 export async function loadMyMatches(email: string): Promise<Trade[]> {
-  const client = await initDatabase();
+  const {client, close} = await initDatabase();
 
   const res_id = await client.query<{ id: number }>("select id from users where email =$1", [
     email,
@@ -151,6 +154,8 @@ INNER JOIN users ON sellers.user_id = users.id
 AND sellers.rarity = buyers.rarity`,
     [res_id.rows[0].id]
   );
+
+  await close();
 
   return res.rows;
 }
