@@ -41,6 +41,7 @@
 
     .toggle-button-cardSet {
         margin: 20px;
+        user-select: none;
     }
     
     .toggle-button-cardSet.saving {

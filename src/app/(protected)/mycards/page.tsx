@@ -106,16 +106,6 @@ function Page() {
     });
   }, []);
 
-  //   const filteredCards = useMemo(() => {
-  //     console.log("Filtrage !");
-  //     if (cardFilter) {
-  //       return allCards.filter(
-  //         (card) => card.quantity_to_buy > 0 || card.quantity_to_sell > 0
-  //       );
-  //     } else {
-  //       return allCards;
-  //     }
-  //   }, [cardFilter, allCards]);
 
   const filteredCards = useMemo( () => {
       return allCards.filter(
@@ -132,7 +122,7 @@ function Page() {
         ),
       };
     });
-  }, [cardByExtension]);
+  }, [cardByExtension, rarityFilter]);
 
   const toggleRarityFilter = (rarity: string) => {
     setRarityFilter(
