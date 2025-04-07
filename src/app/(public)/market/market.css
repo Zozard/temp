@@ -27,3 +27,8 @@
 .me {
   grid-area: me;
 }
+
+p {
+  padding: 20px;
+  text-align: center;
+}

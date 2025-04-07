@@ -1,6 +1,6 @@
 "use client";
 
-import dynamic from 'next/dynamic';
+import dynamic from "next/dynamic";
 import { Trade, loadMyMatches } from "./market";
 import { useEffect, useState } from "react";
 import { CardDisplay } from "@/app/(protected)/mycards/CardDisplay";
@@ -18,23 +18,41 @@ function Market() {
 
   return (
     <div className="market">
-      {trades.map((trade, index) => (
-        <div key={index} className="trade">
-          <div className="mine">
-            <CardDisplay cardId={trade.card_to_sell} quantityToBuy={null} quantityToSell={null} />
+      {trades.length === 0 ? (
+        <p>
+          {" "}
+          Si vous avez des matchs pour faire des échanges, ils apparaitront ici.
+          <br />
+          <br />
+          Pour l'instant, vous n'en avez pas. Avez-vous bien rempli la page
+          MyCards ?{" "}
+        </p>
+      ) : (
+        trades.map((trade, index) => (
+          <div key={index} className="trade">
+            <div className="mine">
+              <CardDisplay
+                cardId={trade.card_to_sell}
+                quantityToBuy={null}
+                quantityToSell={null}
+              />
+            </div>
+            <div className="me">Me</div>
+            <div className="arrows">⇔</div>
+            <div className="offer">
+              <CardDisplay
+                cardId={trade.card_to_buy}
+                quantityToBuy={null}
+                quantityToSell={null}
+              />
+            </div>
+            <div className="partner">{trade.trade_partner_pseudo}</div>
           </div>
-          <div className="me">Me</div>
-          <div className="arrows">⇔</div>
-          <div className="offer">
-            <CardDisplay cardId={trade.card_to_buy} quantityToBuy={null} quantityToSell={null} />
-          </div>
-          <div className="partner">{trade.trade_partner_pseudo}</div>
-        </div>
-      ))}
+        ))
+      )}
     </div>
   );
 }
-
 
 export default dynamic(() => Promise.resolve(Market), {
   ssr: false,

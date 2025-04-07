@@ -16,7 +16,10 @@ export default function ProfilePage() {
   }, []);
 
   return (
-    <div>
+    <div className="main-content">
+      <p>
+      ⚠️ Page inutile pour le moment ⚠️
+      </p>
       <h1>Profile</h1>
       {/* Contenu de la page profil */}
       <label>Mon code ami</label>
@@ -26,7 +29,9 @@ export default function ProfilePage() {
         value={friendCode}
         onChange={(event) => setFriendCode(event.target.value)}
       />
-      <button onClick={() => saveFriendCode("g.zozine@gmail.com", friendCode)}>Save</button>
+      <button onClick={() => saveFriendCode("g.zozine@gmail.com", friendCode)}>
+        Save
+      </button>
     </div>
   );
 }

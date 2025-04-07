@@ -1,7 +1,14 @@
 "use client";
-import { GoogleLogin, googleLogout, GoogleOAuthProvider } from "@react-oauth/google";
+
+import {
+  GoogleLogin,
+  googleLogout,
+  GoogleOAuthProvider,
+} from "@react-oauth/google";
 import { useState, useEffect } from "react";
 import { jwtDecode } from "jwt-decode";
+import "./globals.css";
+import homePicture from './assets/home-picture.png';
 
 // Interface pour typer les informations utilisateur Google
 interface GoogleUserInfo {
@@ -52,32 +59,40 @@ function Home() {
   if (token !== null) {
     return (
       <div>
-        <p>
-          Bienvenue {userInfo?.given_name} {userInfo?.family_name} !
-        </p>
-        <p>Email : {userInfo?.email}</p>
-        <button onClick={handleLogout}>Se déconnecter</button>
+        <div className="main-content">
+          <p>Email : {userInfo?.email}</p>
+          <button onClick={handleLogout}>Se déconnecter</button>
+          <h1>Bienvenue sur Poketrade !</h1>
+          <img src={homePicture.src} alt="Home"/>
+        </div>
       </div>
     );
   } else {
     return (
-      <div className='google-login-container'>
-      <GoogleLogin
-        onSuccess={(credentialResponse) => {
-          console.log(credentialResponse);
-          setIsLoggedIn(true); // Used to re-render component
-          if (credentialResponse.credential !== undefined) {
-            const decoded = jwtDecode<GoogleUserInfo>(credentialResponse.credential);
-            setUserInfo(decoded);
-            if (typeof window !== "undefined") {
-              window.localStorage.setItem("token", credentialResponse.credential);
-            }
-          }
-        }}
-        onError={() => {
-          console.log("Login Failed");
-        }}
-      />
+      <div className="main-content">
+        <div className="google-login-container">
+          <GoogleLogin
+            onSuccess={(credentialResponse) => {
+              console.log(credentialResponse);
+              setIsLoggedIn(true); // Used to re-render component
+              if (credentialResponse.credential !== undefined) {
+                const decoded = jwtDecode<GoogleUserInfo>(
+                  credentialResponse.credential
+                );
+                setUserInfo(decoded);
+                if (typeof window !== "undefined") {
+                  window.localStorage.setItem(
+                    "token",
+                    credentialResponse.credential
+                  );
+                }
+              }
+            }}
+            onError={() => {
+              console.log("Login Failed");
+            }}
+          />
+        </div>
       </div>
     );
   }
