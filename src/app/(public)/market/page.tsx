@@ -24,7 +24,7 @@ function Market() {
           Si vous avez des matchs pour faire des échanges, ils apparaitront ici.
           <br />
           <br />
-          Pour l&aposinstant, vous n&aposen avez pas. Avez-vous bien rempli la page
+          Pour l&apos;instant, vous n&apos;en avez pas. Avez-vous bien rempli la page
           MyCards ?{" "}
         </p>
       ) : (
