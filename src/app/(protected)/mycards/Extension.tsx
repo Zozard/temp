@@ -82,7 +82,7 @@ export function Extension(props: ExtensionProps) {
     return props.extension.cards.filter((card) => {
       // on a besoin d'avoir le numéro de carte sans l'extension avant
       // dans l'objectif de trimer les 0 pour la comparaison
-      const [_, rawCardNumber] = card.card_id.split("-");
+      const [, rawCardNumber] = card.card_id.split("-");
       const cardNumber = trimLeftZeros(rawCardNumber);
 
       if (isNumeric) {
