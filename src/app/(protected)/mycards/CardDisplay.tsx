@@ -1,9 +1,16 @@
 "use client";
 
-const extensionToUrl: Record<string, string> = {
+export const extensionToUrl: Record<string, string> = {
   A1: "puissance-genetique",
   A1a: "l-ile-fabuleuse",
   A2: "choc-spatio-temporel",
+};
+
+export const trimLeftZeros = (str: string) => {
+  while (str.startsWith("0")) {
+    str = str.substring(1);
+  }
+  return str;
 };
 
 type CardProps = {
@@ -25,12 +32,7 @@ export function CardDisplay({
   setSell,
   setBuy,
 }: CardProps) {
-  const trimLeftZeros = (str: string) => {
-    while (str.startsWith("0")) {
-      str = str.substring(1);
-    }
-    return str;
-  };
+
 
   if (quantityToBuy === null) {
     quantityToBuy = 0;

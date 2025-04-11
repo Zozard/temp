@@ -1,6 +1,6 @@
 import { Card } from "../../types/Card";
 import { Accordion } from "./Accordion";
-import { CardDisplay } from "./CardDisplay";
+import { CardDisplay, trimLeftZeros, extensionToUrl } from "./CardDisplay";
 import { useState, useMemo, useEffect } from "react";
 import { useAuthenticatedUser } from "../hooks/useAuthenticatedUser";
 import { saveCardState } from "./mycards";
@@ -76,9 +76,27 @@ export function Extension(props: ExtensionProps) {
   };
 
   const filteredCards = useMemo(() => {
-    return props.extension.cards.filter((card) =>
-      props.rarityFilter.includes(card.rarity) && card.card_name.toLowerCase().includes(props.searchText.toLowerCase())
-    );
+    // Vérifier si la recherche est uniquement numérique
+    const isNumeric = /^\d+$/.test(props.searchText);
+
+    return props.extension.cards.filter((card) => {
+      // on a besoin d'avoir le numéro de carte sans l'extension avant
+      // dans l'objectif de trimer les 0 pour la comparaison
+      const [_, rawCardNumber] = card.card_id.split("-");
+      const cardNumber = trimLeftZeros(rawCardNumber);
+
+      if (isNumeric) {
+        return (
+          cardNumber.toString() === props.searchText &&
+          props.rarityFilter.includes(card.rarity)
+        );
+      } else {
+        return (
+          props.rarityFilter.includes(card.rarity) &&
+          card.card_name.toLowerCase().includes(props.searchText.toLowerCase())
+        );
+      }
+    });
   }, [props.rarityFilter, props.searchText, props.extension.cards]);
 
   const setAllDirections = (direction: Direction) => {
@@ -112,7 +130,11 @@ export function Extension(props: ExtensionProps) {
         <Accordion
           header={
             <div className="extension-header">
-              <h2>{props.extension.name}</h2>
+              <img
+                src={`https://www.media.pokekalos.fr/img/jeux/pocket/extensions/${
+                  extensionToUrl[props.extension.name]
+                }/logo.png`}
+              />
             </div>
           }
           initialState="open"

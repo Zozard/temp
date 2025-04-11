@@ -113,20 +113,21 @@ function Page() {
   return (
     <div className="all-cards-page">
       <div className="rarity-selector">
-          {["⬧", "⬧⬧", "⬧⬧⬧", "⬧⬧⬧⬧", "★", "★★", "★★★", "👑"].map((rarity) => (
-            <button
-              key={rarity}
-              onClick={() => toggleRarityFilter(rarity)}
-              className={`toggle-button-cardSet ${
-                rarityFilter.includes(rarity) ? "active" : ""
-              }`}
-            >
-              {rarity}
-            </button>
-          ))}
+        {["⬧", "⬧⬧", "⬧⬧⬧", "⬧⬧⬧⬧", "★", "★★", "★★★", "👑"].map((rarity) => (
+          <button
+            key={rarity}
+            onClick={() => toggleRarityFilter(rarity)}
+            className={`toggle-button-cardSet ${
+              rarityFilter.includes(rarity) ? "active" : ""
+            }`}
+          >
+            {rarity}
+          </button>
+        ))}
       </div>
-      <div className="name-filter">
-      <input
+      <div className="name-filter-container">
+        <label>Recherche par nom ou numéro : </label>
+        <input
           type="text"
           value={searchText}
           onChange={(e) => setSearchText(e.target.value)}
@@ -134,11 +135,12 @@ function Page() {
       </div>
       <div className="extensions-container">
         {cardByExtension.map((extension) => (
-          <Extension 
-          key={extension.name}
-          extension={extension}
-          rarityFilter={rarityFilter}
-          searchText={searchText}/>
+          <Extension
+            key={extension.name}
+            extension={extension}
+            rarityFilter={rarityFilter}
+            searchText={searchText}
+          />
         ))}
       </div>
     </div>
