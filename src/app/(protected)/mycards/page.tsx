@@ -24,6 +24,9 @@ function Page() {
     "👑",
   ]);
 
+    // État pour stocker le texte de recherche
+  const [searchText, setSearchText] = useState('');
+
   // const cards = [card1, card2, card3];
 
   // const extensions = [
@@ -122,12 +125,20 @@ function Page() {
             </button>
           ))}
       </div>
+      <div className="name-filter">
+      <input
+          type="text"
+          value={searchText}
+          onChange={(e) => setSearchText(e.target.value)}
+        />
+      </div>
       <div className="extensions-container">
         {cardByExtension.map((extension) => (
           <Extension 
           key={extension.name}
           extension={extension}
-          rarityFilter={rarityFilter}/>
+          rarityFilter={rarityFilter}
+          searchText={searchText}/>
         ))}
       </div>
     </div>

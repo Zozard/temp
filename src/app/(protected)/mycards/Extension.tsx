@@ -16,6 +16,7 @@ type Extension = {
 type ExtensionProps = {
   extension: Extension;
   rarityFilter: string[];
+  searchText: string;
 };
 
 export function Extension(props: ExtensionProps) {
@@ -76,9 +77,9 @@ export function Extension(props: ExtensionProps) {
 
   const filteredCards = useMemo(() => {
     return props.extension.cards.filter((card) =>
-      props.rarityFilter.includes(card.rarity)
+      props.rarityFilter.includes(card.rarity) && card.card_name.toLowerCase().includes(props.searchText.toLowerCase())
     );
-  }, [props.rarityFilter, props.extension.cards]);
+  }, [props.rarityFilter, props.searchText, props.extension.cards]);
 
   const setAllDirections = (direction: Direction) => {
     // ne doit impacter que les cartes du filtre actuel
