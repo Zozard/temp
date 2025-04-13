@@ -58,7 +58,7 @@ function Market() {
                     handleCancelTrade(user.email, trade.card_to_sell_id)
                   }
                 >
-                  Don't want to give anymore
+                  Don&apos;t want to give anymore
                 </button>
               </div>
               <div className="arrows">⇔</div>
@@ -69,7 +69,7 @@ function Market() {
                     handleCancelTrade(user.email, trade.card_to_buy_id)
                   }
                 >
-                  Don't look for anymore
+                  Don&apos;t look for anymore
                 </button>
               </div>
             </div>
