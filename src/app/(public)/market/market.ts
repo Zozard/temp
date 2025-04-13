@@ -1,6 +1,5 @@
 "use server";
 
-import { Card } from "../../types/Card";
 import { initDatabase } from "@/actions/database";
 
 export type Trade = {
