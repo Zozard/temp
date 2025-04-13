@@ -3,25 +3,11 @@
 import { Card } from "../../types/Card";
 import { initDatabase } from "@/actions/database";
 
-export type MatchingOffer = {
-  card: Card;
-  sellers: { pseudo: string; quantity: number }[];
-};
-
-export type Offer = {
-  id: number;
-  card_id: string;
-  card_name: string;
-  rarity: string;
-  email: string;
-  pseudo: string;
-  quantity_to_sell: number;
-  quantity_to_buy: number;
-};
-
 export type Trade = {
   card_to_sell: string;
+  card_to_sell_id: string;
   card_to_buy: string;
+  card_to_buy_id: string;
   card_rarity: string;
   trade_partner_email: string;
   trade_partner_pseudo: string;
@@ -82,39 +68,39 @@ export function findMatches(buyerEmail: string, offers: Offer[]): MatchingOffer[
 }
 */
 
-export async function loadAllOffers(): Promise<Offer[]> {
-  const {client, close} = await initDatabase();
+// export async function loadAllOffers(): Promise<Offer[]> {
+//   const { client, close } = await initDatabase();
 
-  const res = await client.query<Offer>(
-    `SELECT
-      cards.id,
-      cards.card_id,
-      cards.card_name,
-      cards.rarity,
-      users.email,
-      users.pseudo,
-      SUM(CASE WHEN user_cards.direction = 'BUY' THEN user_cards.quantity ELSE 0 END) AS quantity_to_buy,
-      SUM(CASE WHEN user_cards.direction = 'SELL' THEN user_cards.quantity ELSE 0 END) AS quantity_to_sell
-    FROM cards
-    JOIN user_cards ON cards.id = user_cards.card_id
-    JOIN users on users.id = user_cards.user_id
-    GROUP BY cards.id, cards.card_id, cards.card_name, cards.rarity, users.email, users.pseudo
-    ORDER BY cards.card_id`
-  );
+//   const res = await client.query<Offer>(
+//     `SELECT
+//       cards.id,
+//       cards.card_id,
+//       cards.card_name,
+//       cards.rarity,
+//       users.email,
+//       users.pseudo,
+//       SUM(CASE WHEN user_cards.direction = 'BUY' THEN user_cards.quantity ELSE 0 END) AS quantity_to_buy,
+//       SUM(CASE WHEN user_cards.direction = 'SELL' THEN user_cards.quantity ELSE 0 END) AS quantity_to_sell
+//     FROM cards
+//     JOIN user_cards ON cards.id = user_cards.card_id
+//     JOIN users on users.id = user_cards.user_id
+//     GROUP BY cards.id, cards.card_id, cards.card_name, cards.rarity, users.email, users.pseudo
+//     ORDER BY cards.card_id`
+//   );
 
-  await close();
+//   await close();
 
-
-  return res.rows;
-}
+//   return res.rows;
+// }
 
 //
 export async function loadMyMatches(email: string): Promise<Trade[]> {
-  const {client, close} = await initDatabase();
+  const { client, close } = await initDatabase();
 
-  const res_id = await client.query<{ id: number }>("select id from users where email =$1", [
-    email,
-  ]);
+  const res_id = await client.query<{ id: number }>(
+    "select id from users where email =$1",
+    [email]
+  );
 
   if (res_id.rowCount !== 1) {
     throw new Error("Something Wrong happened!!");
@@ -123,6 +109,7 @@ export async function loadMyMatches(email: string): Promise<Trade[]> {
   const res = await client.query<Trade>(
     `WITH sellers AS
   (SELECT buyer_cards.card_id,
+          buyer_cards.id,
           uc_sellers.user_id,
           buyer_cards.rarity
    FROM cards AS buyer_cards
@@ -134,6 +121,7 @@ export async function loadMyMatches(email: string): Promise<Trade[]> {
      AND uc_sellers.user_id != $1),
      buyers AS
   (SELECT buyer_cards.card_id,
+          buyer_cards.id,
           uc_sellers.user_id,
           buyer_cards.rarity
    FROM cards AS buyer_cards
@@ -143,8 +131,10 @@ export async function loadMyMatches(email: string): Promise<Trade[]> {
    WHERE uc_buyer.user_id = $1
      AND uc_buyer.direction = 'SELL'
      AND uc_sellers.user_id != $1)
-SELECT sellers.card_id AS card_to_sell,
-       buyers.card_id AS card_to_buy,
+SELECT sellers.card_id AS card_to_buy,
+       sellers.id AS card_to_buy_id,
+       buyers.card_id AS card_to_sell,
+       buyers.id AS card_to_sell_id,
        sellers.rarity AS card_rarity,
        users.email AS trade_partner_email,
        users.pseudo AS trade_partner_pseudo

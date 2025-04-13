@@ -1,19 +1,90 @@
+.market {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 20px;
+  padding: 20px;
+}
+
 .trade {
   display: grid;
   justify-items: center;
   align-items: center;
+  grid-column: span 3;
   grid-template-areas:
-    "mine arrows offer"
+    "mine arrows-container offer"
     "me . partner";
+  position: relative;
+
+  img {
+    max-height: 300px;
+  }
+}
+
+/* Bordure entre les trades */
+.trade:nth-child(odd) {
+  border-right: 1px solid #ccc;
+  padding-right: 20px;
+}
+
+.trade:nth-child(even) {
+  padding-left: 20px;
 }
 
 .mine {
   grid-area: mine;
 }
 
+/* Conteneur pour les flèches et boutons */
+.arrows-container {
+  grid-area: arrows-container;
+  display: grid;
+  grid-template-rows: auto auto auto;
+  grid-template-columns: 1fr;
+  align-items: center;
+  width: 100%;
+}
+
+/* Conteneur pour le bouton du haut */
+.top-button-container {
+  display: flex;
+  justify-content: flex-start; /* Aligné à gauche */
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+/* Conteneur pour le bouton du bas */
+.bottom-button-container {
+  display: flex;
+  justify-content: flex-end; /* Aligné à droite */
+  width: 100%;
+  margin-top: 10px;
+}
+
+/* Style pour le bouton Refuser */
+.refuse-button {
+  background-color: #f44336;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* Style pour le bouton Accepter */
+.accept-button {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* Style pour la flèche */
 .arrows {
-  grid-area: arrows;
-  font-size: 80px;
+  font-size: 60px;
+  text-align: center;
+  width: 100%;
 }
 
 .offer {
@@ -31,4 +102,40 @@
 p {
   padding: 20px;
   text-align: center;
+  grid-column: 1 / -1;
+}
+
+/* Media queries pour la responsivité */
+@media (max-width: 1200px) {
+  .market {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  
+  .trade {
+    grid-column: span 2;
+  }
+  
+  .trade:nth-child(odd) {
+    border-right: 1px solid #ccc;
+  }
+}
+
+@media (max-width: 768px) {
+  .market {
+    grid-template-columns: 1fr;
+  }
+  
+  .trade {
+    grid-column: 1;
+    border-right: none !important;
+    padding-right: 0;
+    padding-left: 0;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+  }
+  
+  .trade:last-child {
+    border-bottom: none;
+  }
 }

@@ -6,15 +6,27 @@ import { useEffect, useState } from "react";
 import { CardDisplay } from "@/app/(protected)/mycards/CardDisplay";
 import { useAuthenticatedUser } from "@/app/(protected)/hooks/useAuthenticatedUser";
 import "./market.css";
+import { saveCardState } from "@/app/(protected)/mycards/mycards";
 
 function Market() {
   const [trades, setTrades] = useState<Trade[]>([]);
   const user = useAuthenticatedUser();
+  const [refreshCounter, setRefreshCounter] = useState(0);
 
   useEffect(() => {
     const allTradesPromise = loadMyMatches(user.email);
     allTradesPromise.then((trades) => setTrades(trades));
-  }, [user]);
+    console.log(trades);
+  }, [user, refreshCounter]);
+
+  const handleCancelTrade = async (email: string, card_id: string) => {
+    try {
+      await saveCardState(email, { [card_id]: null });
+      setRefreshCounter((prev) => prev + 1);
+    } catch (error) {
+      console.error("Error saving card state:", error);
+    }
+  };
 
   return (
     <div className="market">
@@ -24,8 +36,8 @@ function Market() {
           Si vous avez des matchs pour faire des échanges, ils apparaitront ici.
           <br />
           <br />
-          Pour l&apos;instant, vous n&apos;en avez pas. Avez-vous bien rempli la page
-          MyCards ?{" "}
+          Pour l&apos;instant, vous n&apos;en avez pas. Avez-vous bien rempli la
+          page MyCards ?{" "}
         </p>
       ) : (
         trades.map((trade, index) => (
@@ -37,8 +49,30 @@ function Market() {
                 quantityToSell={null}
               />
             </div>
-            <div className="me">Me</div>
-            <div className="arrows">⇔</div>
+            <div className="me"> I give to {trade.trade_partner_pseudo}</div>
+            <div className="arrows-container">
+              <div className="top-button-container">
+                <button
+                  className="cancel-card-searched"
+                  onClick={() =>
+                    handleCancelTrade(user.email, trade.card_to_sell_id)
+                  }
+                >
+                  Don't want to give anymore
+                </button>
+              </div>
+              <div className="arrows">⇔</div>
+              <div className="bottom-button-container">
+                <button
+                  className="cancel-card-offered"
+                  onClick={() =>
+                    handleCancelTrade(user.email, trade.card_to_buy_id)
+                  }
+                >
+                  Don't look for anymore
+                </button>
+              </div>
+            </div>
             <div className="offer">
               <CardDisplay
                 cardId={trade.card_to_buy}
@@ -46,7 +80,7 @@ function Market() {
                 quantityToSell={null}
               />
             </div>
-            <div className="partner">{trade.trade_partner_pseudo}</div>
+            <div className="partner">{trade.trade_partner_pseudo} gives me</div>
           </div>
         ))
       )}

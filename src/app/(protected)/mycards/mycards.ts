@@ -1,10 +1,10 @@
 "use server";
 
 import { initDatabase } from "@/actions/database";
-import { Card } from '../../types/Card';
+import { Card } from "../../types/Card";
 
 export async function loadAllCards(email: string): Promise<Card[]> {
-  const {client, close} = await initDatabase();
+  const { client, close } = await initDatabase();
 
   //const res = await client.query<Card>("SELECT id, card_id, card_name, rarity, 5 as quantity FROM cards");
 
@@ -42,7 +42,7 @@ export async function loadAllCards(email: string): Promise<Card[]> {
 }
 
 export async function loadMyCards(email: string): Promise<Card[]> {
-  const {client, close} = await initDatabase();
+  const { client, close } = await initDatabase();
 
   const res = await client.query<Card>(
     "SELECT cards.id, cards.card_id, cards.card_name, cards.rarity FROM user_cards join cards on cards.id = user_cards.card_id join users on users.id = user_cards.user_id Where users.email = $1",
@@ -59,7 +59,7 @@ interface UserCardQuantityResult {
 }
 
 export async function loadUserCardQuantity(email: string, card_id: string) {
-  const {client, close} = await initDatabase();
+  const { client, close } = await initDatabase();
 
   const res = await client.query<UserCardQuantityResult>(
     "SELECT user_cards.quantity FROM user_cards join cards on cards.id = user_cards.card_id join users on users.id = user_cards.user_id Where users.email = $1 and cards.card_id= $2",
@@ -69,15 +69,20 @@ export async function loadUserCardQuantity(email: string, card_id: string) {
   await close();
 
   if (!res.rows[0]) return 0;
- 
+
   return res.rows[0].quantity;
 }
 
+export async function saveCardState(
+  email: string,
+  state: { [key: string]: "BUY" | "SELL" | null }
+) {
+  const { client, close } = await initDatabase();
 
-export async function saveCardState(email: string, state: { [key: string]: "BUY" | "SELL" | null }){
-  const {client, close} = await initDatabase();
-  
-    const res = await client.query<{ id: number }>("SELECT id FROM users WHERE email = $1", [email]);
+  const res = await client.query<{ id: number }>(
+    "SELECT id FROM users WHERE email = $1",
+    [email]
+  );
   if (res.rows.length !== 1) {
     // User not found / or multiple users? o_O
     throw new Error("User not found");
@@ -85,14 +90,19 @@ export async function saveCardState(email: string, state: { [key: string]: "BUY"
 
   const userId = res.rows[0].id;
 
+  console.log(state);
   const keysToDelete = Object.keys(state);
+  console.log(keysToDelete.join(","));
+  console.log(userId);
 
   await client.query(
-    `DELETE FROM user_cards WHERE user_id = $1 and card_id in (${keysToDelete.join(",")})`, [userId]
+    `DELETE FROM user_cards WHERE user_id = $1 and card_id in (${keysToDelete.join(
+      ","
+    )})`,
+    [userId]
   );
 
-
-  console.log({state});
+  console.log({ state });
 
   const valuesToInsert = Object.entries(state)
     .filter(([, direction]) => direction !== null)
@@ -100,11 +110,15 @@ export async function saveCardState(email: string, state: { [key: string]: "BUY"
       return `(${userId}, ${cardId}, '${direction}', 1)`;
     });
 
-  console.log({ values: valuesToInsert.join(',') })
+  console.log({ values: valuesToInsert.join(",") });
 
-  await client.query(
-    `INSERT INTO user_cards (user_id, card_id, direction, quantity) VALUES ${valuesToInsert.join(',')}`
-  );
+  if (valuesToInsert.length !== 0) {
+    await client.query(
+      `INSERT INTO user_cards (user_id, card_id, direction, quantity) VALUES ${valuesToInsert.join(
+        ","
+      )}`
+    );
+  }
 
   await close();
 }
