@@ -5,8 +5,9 @@ import { useEffect, useState } from "react";
 import { useAuthenticatedUser } from "../hooks/useAuthenticatedUser";
 import { Notice } from "../../types/Notice";
 import "./profile.css";
+import dynamic from "next/dynamic";
 
-export default function ProfilePage() {
+function ProfilePage() {
   const user = useAuthenticatedUser();
   const [allNotifs, setAllNotifs] = useState<Notice[] | null>([]);
 
@@ -63,3 +64,6 @@ export default function ProfilePage() {
   );
 }
 
+export default dynamic(() => Promise.resolve(ProfilePage), {
+  ssr: false,
+});
