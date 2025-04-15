@@ -38,3 +38,26 @@ CREATE TABLE user_cards
 
 -- 11/02-2025
 ALTER TABLE cards RENAME COLUMN pokemon_name TO card_name;
+
+-- Troisième Migration
+-- Mise en place des trade requests 
+
+BEGIN;
+
+CREATE TYPE trade_status AS ENUM ('PENDING', 'ACCEPTED', 'REJECTED', 'SEEN');
+
+CREATE TABLE trade_requests (
+    id SERIAL PRIMARY KEY,
+    
+    sender_id INT NOT NULL REFERENCES users(id),
+    receiver_id INT NOT NULL REFERENCES users(id),
+
+    offered_card_id INT NOT NULL REFERENCES cards(id),
+    requested_card_id INT NOT NULL REFERENCES cards(id),
+
+    status trade_status NOT NULL DEFAULT 'PENDING',
+    created_at TIMESTAMP DEFAULT NOW(),
+    seen_at TIMESTAMP
+);
+
+COMMIT;
