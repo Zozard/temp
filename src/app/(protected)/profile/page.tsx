@@ -26,7 +26,7 @@ export default function ProfilePage() {
       <h2>Notifications</h2>
       <div className="notifications">
         {allNotifs === null ? (
-          <p> Vous n'avez pas de notification</p>
+          <p>You have no notification</p>
         ) : (
           allNotifs?.map((notif, index) => (
             <li key={index}>
