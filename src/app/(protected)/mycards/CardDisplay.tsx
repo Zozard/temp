@@ -4,6 +4,7 @@ export const extensionToUrl: Record<string, string> = {
   A1: "puissance-genetique",
   A1a: "l-ile-fabuleuse",
   A2: "choc-spatio-temporel",
+  A2a: "lumiere-triomphale",
 };
 
 export const trimLeftZeros = (str: string) => {
@@ -32,8 +33,6 @@ export function CardDisplay({
   setSell,
   setBuy,
 }: CardProps) {
-
-
   if (quantityToBuy === null) {
     quantityToBuy = 0;
   }
