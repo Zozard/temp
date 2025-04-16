@@ -61,3 +61,12 @@ CREATE TABLE trade_requests (
 );
 
 COMMIT;
+
+-- Quatrième Migration 
+-- Pour empêcher le spam de notifications 
+
+CREATE INDEX idx_trade_requests_status ON trade_requests(status);
+
+CREATE UNIQUE INDEX unique_pending_seen_trade_requests
+ON trade_requests (sender_id, receiver_id, offered_card_id, requested_card_id)
+WHERE status IN ('PENDING', 'SEEN');

@@ -1,0 +1,97 @@
+/* Overlay de la modale */
+.notification-modal-overlay{
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 50;
+}
+
+/* Arrière-plan semi-transparent */
+.notification-modal-backdrop {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+
+  /* Conteneur de la modale */
+  .notification-modal-container {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+    padding: 24px;
+    width: 384px;
+    position: relative;
+    z-index: 10;
+
+    
+  }
+
+  /* Bouton pour fermer la modale */
+.modal-close-button {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: none;
+    border: none;
+    color: #6b7280;
+    cursor: pointer;
+  }
+
+  .modal-close-button:hover {
+    color: #1f2937;
+  }
+  
+  /* Conteneur des boutons */
+.notification-modal-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 16px;
+  }
+
+  /* Bouton principal (Oui) */
+.modal-yes-button {
+    padding: 8px 16px;
+    background-color: #3b82f6;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  
+  .modal-yes-button:hover {
+    background-color: #2563eb;
+  }
+
+  /* Bouton secondaire (Non) */
+.modal-no-button {
+    padding: 8px 16px;
+    background-color: #e5e7eb;
+    color: #1f2937;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  
+  .modal-no-button:hover {
+    background-color: #d1d5db;
+  }
+
+  .notification-error-container {
+    text-align: center;
+    padding: 16px 0;
+  }
+  
+  .error-message {
+    color: #e53e3e;
+    margin-bottom: 16px;
+  }

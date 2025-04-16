@@ -7,6 +7,7 @@ import { CardDisplay } from "@/app/(protected)/mycards/CardDisplay";
 import { useAuthenticatedUser } from "@/app/(protected)/hooks/useAuthenticatedUser";
 import "./market.css";
 import { saveCardState } from "@/app/(protected)/mycards/mycards";
+import { NotificationModal } from "./components/NotificationModal";
 
 function Market() {
   const [trades, setTrades] = useState<Trade[]>([]);
@@ -81,6 +82,8 @@ function Market() {
               />
             </div>
             <div className="partner">{trade.trade_partner_pseudo} gives me</div>
+            <NotificationModal trade={trade} />
+
           </div>
         ))
       )}

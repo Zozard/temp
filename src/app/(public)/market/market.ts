@@ -148,3 +148,54 @@ AND sellers.rarity = buyers.rarity`,
 
   return res.rows;
 }
+
+export async function createNotification(email: string, trade: Trade) {
+  const { client, close } = await initDatabase();
+  
+  try {
+    const res_sender_id = await client.query<{ id: number }>(
+      "select id from users where email =$1",
+      [email]
+    );
+
+    const sender_id = res_sender_id.rows[0].id;
+
+    const res_receiver_id = await client.query<{ id: number }>(
+      "select id from users where email =$1",
+      [trade.trade_partner_email]
+    );
+
+    const receiver_id = res_receiver_id.rows[0].id;
+
+    // Essayer d'insérer et capturer le résultat
+    const req = await client.query(
+      `INSERT INTO trade_requests (sender_id, receiver_id, offered_card_id, requested_card_id, status) 
+       VALUES ($1, $2, $3, $4,'PENDING') RETURNING id`,
+      [sender_id, receiver_id, trade.card_to_sell_id, trade.card_to_buy_id]
+    );
+    
+    // Si l'insertion a réussi, renvoyer l'ID
+    return { success: true, requestId: req.rows[0]?.id };
+    
+  } catch (error) {
+    // Vérifier si c'est une erreur de contrainte d'unicité
+    if ((error as { code?: string }).code === '23505') { // Code PostgreSQL pour violation de contrainte unique
+      return { 
+        success: false, 
+        error: 'Une demande d\'échange identique existe déjà',
+        code: 'DUPLICATE_REQUEST'
+      };
+    }
+    
+    // Autres erreurs
+    console.error("Erreur lors de la création de la notification:", error);
+    return { 
+      success: false, 
+      error: 'Erreur lors de la création de la notification',
+      code: 'SERVER_ERROR'
+    };
+  } finally {
+    // S'assurer que la connexion est fermée même en cas d'erreur
+    await close();
+  }
+}
