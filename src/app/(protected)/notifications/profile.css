@@ -1,0 +1,80 @@
+h1 {
+  text-align: center;
+  margin-bottom: 50px;
+  font-size: 48px;
+}
+
+.notifications {
+  padding: 10px;
+  margin: 10px 0;
+
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* Deux colonnes de largeur égale */
+  grid-template-rows: auto auto; /* Deux lignes, hauteur automatique */
+  gap: 20px; /* Espace entre les éléments */
+  padding: 20px;
+
+  .notification-title {
+    grid-column: 1 / span 2; /* S'étend sur les deux colonnes */
+    padding: 20px;
+    text-align: center;
+    font-size: 24px;
+    border-radius: 5px;
+  }
+
+  .sent-notifications {
+    padding: 20px;
+    border-radius: 5px;
+  }
+
+  .received-notifications {
+    padding: 20px;
+    border-radius: 5px;
+  }
+
+  h2 {
+    text-align: center;
+    margin-bottom: 10px;
+  }
+
+  li {
+    padding: 5px;
+    list-style-type: none;
+  }
+
+  button {
+    margin: 0 10px;
+    padding: 2px 6px;
+    font-size: 12px;
+    border: none;
+    cursor: auto;
+    user-select: none;
+    transition: none;
+    transform: none;
+  }
+
+  button.rejected {
+    background-color: #f13716;
+  }
+  button.accepted {
+    background-color: #24bd0f;
+  }
+  button.pending {
+    background-color: #f1db16;
+  }
+
+  .notification-date {
+    font-size: 0.7em;
+    color: rgb(0, 0, 0, 0.5);
+  }
+
+  .notification-card-name {
+    font-weight: bold;
+    font-size: 1.3em;
+  }
+
+  .notification-friend-name {
+    font-weight: bold;
+    font-size: 1.3em;
+  }
+}

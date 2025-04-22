@@ -30,6 +30,8 @@ function Market() {
   };
 
   return (
+    <>
+    <h1> Possible trades</h1>
     <div className="market">
       {trades.length === 0 ? (
         <p>
@@ -88,6 +90,7 @@ function Market() {
         ))
       )}
     </div>
+    </>
   );
 }
 

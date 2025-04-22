@@ -1,3 +1,9 @@
+h1 {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 48px;
+}
+
 .market {
   display: grid;
   grid-template-columns: repeat(6, 1fr);

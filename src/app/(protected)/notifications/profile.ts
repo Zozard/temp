@@ -23,9 +23,7 @@ export async function loadFriendCode(email: string): Promise<string | null> {
   return value;
 } */
 
-
 export async function loadNotif(email: string): Promise<Notice[]> {
-
   const { client, close } = await initDatabase();
 
   const res = await client.query<Notice>(
@@ -35,7 +33,10 @@ export async function loadNotif(email: string): Promise<Notice[]> {
     requested_card_id, 
     status, 
     created_at, 
-    sender.pseudo as sender_name, 
+    sender.email as sender_email,
+    receiver.email as receiver_email,
+    sender.pseudo as sender_name,
+    receiver.pseudo as receiver_name,
     offered.card_id as offered_func_id, 
     requested.card_id as requested_func_id, 
     offered.card_name as offered_name, 
@@ -47,7 +48,8 @@ export async function loadNotif(email: string): Promise<Notice[]> {
     join cards offered on offered.id = offered_card_id 
     join cards requested on requested.id = requested_card_id 
     
-    WHERE receiver_id in (select id from users where email = $1)`,
+    WHERE receiver_id in (select id from users where email = $1)
+    OR sender_id in (select id from users where email = $1)`,
     [email]
   );
 
@@ -57,4 +59,3 @@ export async function loadNotif(email: string): Promise<Notice[]> {
 
   return res.rows;
 }
-
