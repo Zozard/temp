@@ -62,7 +62,7 @@ function Notifications() {
                   }
                 >
                   {notif.status}
-                </button>
+                 </button>
                 {notif.status === "PENDING" && (
                   <ReplyModal trade_request={notif.id} />
                 )}

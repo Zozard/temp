@@ -75,9 +75,51 @@ Fonctionnel
 - Lire/regarder théorie sur React
   https://grafikart.fr/formations/react  
 
-## Commande SQL pour insérer une nouvelle carte
+  ### 2025-04-22
 
-```sql
-INSERT INTO cards (card_id, card_name, rarity) values ('A1-223', 'Giovanni', '⬧⬧');
-INSERT INTO users (email) values ('<email>');
-```
+  Liste de points pour que le site soit diffusable à grande échelle : 
+  
+  Point critiques: 
+  -Authentification
+  -Corriger les failles d'injection SQL
+  -Mettre en place une création de compte 
+
+  Scaling :
+  -Trop de connexions simultanées à la DB (https://vercel.com/guides/connection-pooling-with-serverless-functions)
+  -Limites du Free Tier de Vercel / Supabase 
+  -Query lentes --> Mettre des index sur les tables de la DB / revoir le schéma 
+
+  Points un peu moins critiques :
+  -Ne pas stocker les emails
+
+  Autres points : 
+  -Traduction en anglais
+  -Pagination + filtres sur la page Market
+  -Groupes d'amis
+  -Favoriser des échanges avec des gens récents (Maintenir une date de visite à utiliser sur Market)
+  -Améliorer l'UX 
+  -Penser à la version mobile
+
+// l'audience est le clientId dans le cas de google auth (voire public/page.tsx)
+// si le payload et l'email sont undefined ça veut dire authentification foirée
+import { OAuth2Client } from 'google-auth-library'
+
+const client = new OAuth2Client();
+
+async function verifyToken(audience: string, token: string): Promise<string | undefined> {
+    const ticket = await client.verifyIdToken({
+        idToken: token,
+        audience,
+    });
+
+    const payload = ticket.getPayload();
+    const userEmail = payload?.['email'];
+
+    return userEmail;
+}
+
+
+// création de compte
+// côté front, on charge le profil d'un gars en donnant le JWT à la fonction backend
+// la fonction quand elle reçoit ça, elle vérifie si un profil existe déjà, si oui elle le renvoie
+// si non, elle le crée puis le renvoit

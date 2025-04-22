@@ -2,6 +2,7 @@
 
 import { initDatabase } from "@/actions/database";
 import { Card } from "../../types/Card";
+import { escapeLiteral } from "pg";
 
 export async function loadAllCards(email: string): Promise<Card[]> {
   const { client, close } = await initDatabase();
@@ -73,6 +74,7 @@ export async function loadUserCardQuantity(email: string, card_id: string) {
   return res.rows[0].quantity;
 }
 
+// TODO: pour l'authentification, ne plus utiliser l'email mais un token 
 export async function saveCardState(
   email: string,
   state: { [key: string]: "BUY" | "SELL" | null }
@@ -90,27 +92,26 @@ export async function saveCardState(
 
   const userId = res.rows[0].id;
 
-  console.log(state);
   const keysToDelete = Object.keys(state);
-  console.log(keysToDelete.join(","));
-  console.log(userId);
+  const escapedKeysToDelete = keysToDelete.map((key) => {
+    return escapeLiteral(key);
+  });
 
   await client.query(
-    `DELETE FROM user_cards WHERE user_id = $1 and card_id in (${keysToDelete.join(
+    `DELETE FROM user_cards WHERE user_id = $1 and card_id in (${escapedKeysToDelete.join(
       ","
     )})`,
     [userId]
   );
 
-  console.log({ state });
-
+  // protégé des injections sql via Number et escapeLiteral
   const valuesToInsert = Object.entries(state)
     .filter(([, direction]) => direction !== null)
     .map(([cardId, direction]) => {
-      return `(${userId}, ${cardId}, '${direction}', 1)`;
+      return `(${Number(userId)}, ${Number(cardId)}, ${
+        direction === null ? null : escapeLiteral(direction)
+      }, 1)`;
     });
-
-  console.log({ values: valuesToInsert.join(",") });
 
   if (valuesToInsert.length !== 0) {
     await client.query(
@@ -122,3 +123,5 @@ export async function saveCardState(
 
   await close();
 }
+
+
