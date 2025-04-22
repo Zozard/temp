@@ -32,7 +32,8 @@ export async function loadNotif(email: string): Promise<Notice[]> {
     offered_card_id, 
     requested_card_id, 
     status, 
-    created_at, 
+    created_at,
+    tr.id as id, 
     sender.email as sender_email,
     receiver.email as receiver_email,
     sender.pseudo as sender_name,
@@ -58,4 +59,25 @@ export async function loadNotif(email: string): Promise<Notice[]> {
   await close();
 
   return res.rows;
+}
+
+export async function processAnswer(
+  trade_request: number,
+  answer: "ACCEPT" | "REJECT"
+): Promise<void> {
+  const { client, close } = await initDatabase();
+
+  if (answer === "REJECT") {
+    await client.query(
+      `UPDATE trade_requests SET status = 'ACCEPTED' WHERE id = $1`,
+      [trade_request]
+    );
+  } else if (answer === "ACCEPT") {
+    await client.query(
+      `UPDATE trade_requests SET status = 'REJECTED' WHERE id = $1`,
+      [trade_request]
+    );
+  }
+
+  await close();
 }

@@ -6,6 +6,7 @@ import { useAuthenticatedUser } from "../hooks/useAuthenticatedUser";
 import { Notice } from "../../types/Notice";
 import "./profile.css";
 import dynamic from "next/dynamic";
+import { ReplyModal } from "@/app/(public)/market/components/ReplyModal";
 
 function Notifications() {
   const user = useAuthenticatedUser();
@@ -35,18 +36,18 @@ function Notifications() {
           <h1>Notifications</h1>{" "}
         </span>
         <div className="received-notifications">
-          <h2>Envoyées</h2>
+          <h2>Reçues</h2>
           {receivedNotifs === null ? (
             <p>You have no received notification</p>
           ) : (
             receivedNotifs?.map((notif, index) => (
               <li key={index}>
                 {notif.sender_name}{" "}
-                <span className="notification-arrow">🠖 </span>
+                donne{" "}
                 <span className="notification-card-name">
                   {notif.offered_func_id} - {notif.offered_name}
                 </span>{" "}
-                <span className="notification-double-arrow">⇔ </span>
+                contre{" "}
                 <span className="notification-card-name">
                   {notif.requested_func_id} - {notif.requested_name}
                 </span>
@@ -62,6 +63,9 @@ function Notifications() {
                 >
                   {notif.status}
                 </button>
+                {notif.status === "PENDING" && (
+                  <ReplyModal trade_request={notif.id} />
+                )}
                 <span className="notification-date">
                   {new Date(notif.created_at).toLocaleString("fr-FR", {
                     day: "2-digit",
@@ -76,13 +80,14 @@ function Notifications() {
           )}
         </div>
         <div className="sent-notifications">
-          <h2>Reçues</h2>
+          <h2>Envoyées</h2>
           {sentNotifs?.map((notif, index) => (
             <li key={index}>
+              Je donne{" "}
               <span className="notification-card-name">
                 {notif.offered_func_id} - {notif.offered_name}
               </span>{" "}
-              <span className="notification-double-arrow">⇔ </span>
+              contre{" "}
               <span className="notification-card-name">
                 {notif.requested_func_id} - {notif.requested_name}{" "}
               </span>

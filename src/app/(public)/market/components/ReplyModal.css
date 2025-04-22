@@ -1,0 +1,85 @@
+/* Overlay de la modale */
+.reply-arrow {
+  cursor: pointer;
+}
+
+.reply-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+}
+
+/* Arrière-plan semi-transparent */
+.reply-modal-backdrop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+/* Conteneur de la modale */
+.reply-modal-container {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+  padding: 24px;
+  width: 384px;
+  position: relative;
+  z-index: 10;
+}
+
+/* Conteneur des boutons */
+.reply-modal-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 16px;
+}
+
+/* Bouton pour fermer la modale */
+.reply-close-button {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: none;
+  border: none;
+  color: #6b7280;
+  cursor: pointer;
+}
+
+.reply-close-button:hover {
+  color: #1f2937;
+}
+
+/* Conteneur des boutons */
+.reply-modal-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 16px;
+}
+
+/* Bouton principal (Oui) */
+.reply-accept-button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+/* Bouton secondaire (Non) */
+.reply-reject-button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
