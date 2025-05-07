@@ -12,11 +12,12 @@ interface GoogleUserInfo {
   picture: string;
   name: string;
   sub: string;
+  token: string;
 }
 
 export function useUser() {
   if (typeof window === "undefined") {
-    throw new Error("Not a browser context")
+    throw new Error("Not a browser context");
   }
 
   const initialToken = window.localStorage.getItem("token");
@@ -39,8 +40,8 @@ export function useUser() {
     if (token === null) {
       return null;
     }
-
-    return jwtDecode<GoogleUserInfo>(token);
+    const decodedToken = jwtDecode(token);
+    return { ...decodedToken, token } as GoogleUserInfo;
   }, [token]);
 
   return user;

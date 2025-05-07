@@ -15,14 +15,14 @@ function Market() {
   const [refreshCounter, setRefreshCounter] = useState(0);
 
   useEffect(() => {
-    const allTradesPromise = loadMyMatches(user.email);
+    const allTradesPromise = loadMyMatches(user.token);
     allTradesPromise.then((trades) => setTrades(trades));
     console.log(trades);
   }, [user, refreshCounter]);
 
-  const handleCancelTrade = async (email: string, card_id: string) => {
+  const handleCancelTrade = async (token: string, card_id: string) => {
     try {
-      await saveCardState(email, { [card_id]: null });
+      await saveCardState(token, { [card_id]: null });
       setRefreshCounter((prev) => prev + 1);
     } catch (error) {
       console.error("Error saving card state:", error);
@@ -58,7 +58,7 @@ function Market() {
                 <button
                   className="cancel-card-searched"
                   onClick={() =>
-                    handleCancelTrade(user.email, trade.card_to_sell_id)
+                    handleCancelTrade(user.token, trade.card_to_sell_id)
                   }
                 >
                   Don&apos;t want to give anymore
@@ -69,7 +69,7 @@ function Market() {
                 <button
                   className="cancel-card-offered"
                   onClick={() =>
-                    handleCancelTrade(user.email, trade.card_to_buy_id)
+                    handleCancelTrade(user.token, trade.card_to_buy_id)
                   }
                 >
                   Don&apos;t look for anymore

@@ -1,6 +1,6 @@
 "use server";
 
-import { initDatabase } from "@/actions/database";
+import { initDatabase, verifyGoogleToken } from "@/actions/database";
 import { Notice } from "../../types/Notice";
 /*import { createClient } from "redis";
 
@@ -23,11 +23,14 @@ export async function loadFriendCode(email: string): Promise<string | null> {
   return value;
 } */
 
-export async function loadNotif(email: string): Promise<Notice[]> {
-  const { client, close } = await initDatabase();
+export async function loadNotif(token: string): Promise<Notice[]> {
+  try {
+    // Vérifier le token Google et récupérer l'email
+    const email = await verifyGoogleToken(token);
+    const { client, close } = await initDatabase();
 
-  const res = await client.query<Notice>(
-    `SELECT 
+    const res = await client.query<Notice>(
+      `SELECT 
     sender_id, 
     offered_card_id, 
     requested_card_id, 
@@ -51,14 +54,18 @@ export async function loadNotif(email: string): Promise<Notice[]> {
     
     WHERE receiver_id in (select id from users where email = $1)
     OR sender_id in (select id from users where email = $1)`,
-    [email]
-  );
+      [email]
+    );
 
-  console.log(res.rows[0].created_at, typeof res.rows[0].created_at);
+    console.log(res.rows[0].created_at, typeof res.rows[0].created_at);
 
-  await close();
+    await close();
 
-  return res.rows;
+    return res.rows;
+  } catch (error) {
+    console.error("Erreur de chargement des notifications:", error);
+    throw error;
+  }
 }
 
 export async function processAnswer(

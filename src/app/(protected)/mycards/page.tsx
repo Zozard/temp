@@ -2,7 +2,7 @@
 
 import dynamic from "next/dynamic";
 import { useMemo, useEffect, useState } from "react";
-import { loadAllCards} from "./mycards";
+import { loadAllCards } from "./mycards";
 import { Card } from "../../types/Card";
 import "./card.css";
 import { useAuthenticatedUser } from "../hooks/useAuthenticatedUser";
@@ -24,8 +24,8 @@ function Page() {
     "👑",
   ]);
 
-    // État pour stocker le texte de recherche
-  const [searchText, setSearchText] = useState('');
+  // État pour stocker le texte de recherche
+  const [searchText, setSearchText] = useState("");
 
   // const cards = [card1, card2, card3];
 
@@ -78,29 +78,13 @@ function Page() {
     return extension;
   }, [allCards]);
 
-  // const [cardsToSell, setCardsToSell] = useState(new Set<string>());
-  // const [cardsToBuy, setCardsToBuy] = useState(new Set<string>());
-
-  // Effet pour filtrer les cartes affichées (se déclenche quand on clique sur les boutons en haut)
   useEffect(() => {
-    const allCardsPromise: Promise<Card[]> = loadAllCards(user.email);
-    allCardsPromise.then((cards) => {
-      setAllCards(cards);
-    });
+      const allCardsPromise: Promise<Card[]> = loadAllCards(user.token);
+      allCardsPromise.then((cards) => {
+        setAllCards(cards);
+      });
   }, []);
 
-
- /* const filteredCardsByExtension = useMemo(() => {
-    return cardByExtension.map((extension) => {
-      return {
-        ...extension,
-        cards: extension.cards.filter((card) =>
-          rarityFilter.includes(card.rarity)
-        ),
-      };
-    });
-  }, [cardByExtension, rarityFilter]);
-*/
   const toggleRarityFilter = (rarity: string) => {
     setRarityFilter(
       (prevFilter) =>

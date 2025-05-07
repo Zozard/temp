@@ -62,7 +62,7 @@ export function Extension(props: ExtensionProps) {
 
     try {
       // Appel à la fonction de sauvegarde (maintenant asynchrone)
-      await saveCardState(user.email, cardSelection);
+      await saveCardState(user.token, cardSelection);
 
       // Attendre un court instant pour que l'utilisateur voie la confirmation
       // (optionnel, pour une meilleure UX)

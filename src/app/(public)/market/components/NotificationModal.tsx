@@ -23,7 +23,7 @@ export const NotificationModal = ({ trade }: NotificationModalProps) => {
 
   const sendNotification = async () => {
     try {
-        const result = await createNotification(user.email, trade);
+        const result = await createNotification(user.token, trade);
 
         if (result.success) {
             setNotificationSent(true);

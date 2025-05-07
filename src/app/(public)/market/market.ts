@@ -1,6 +1,6 @@
 "use server";
 
-import { initDatabase } from "@/actions/database";
+import { initDatabase, verifyGoogleToken } from "@/actions/database";
 
 export type Trade = {
   card_to_sell: string;
@@ -93,20 +93,24 @@ export function findMatches(buyerEmail: string, offers: Offer[]): MatchingOffer[
 // }
 
 //
-export async function loadMyMatches(email: string): Promise<Trade[]> {
-  const { client, close } = await initDatabase();
 
-  const res_id = await client.query<{ id: number }>(
-    "select id from users where email =$1",
-    [email]
-  );
+export async function loadMyMatches(token: string): Promise<Trade[]> {
+  try {
+    // Vérifier le token Google et récupérer l'email
+    const email = await verifyGoogleToken(token);
+    const { client, close } = await initDatabase();
 
-  if (res_id.rowCount !== 1) {
-    throw new Error("Something Wrong happened!!");
-  }
+    const res_id = await client.query<{ id: number }>(
+      "select id from users where email =$1",
+      [email]
+    );
 
-  const res = await client.query<Trade>(
-    `WITH sellers AS
+    if (res_id.rowCount !== 1) {
+      throw new Error("Something Wrong happened!!");
+    }
+
+    const res = await client.query<Trade>(
+      `WITH sellers AS
   (SELECT buyer_cards.card_id,
           buyer_cards.id,
           uc_sellers.user_id,
@@ -141,17 +145,22 @@ FROM sellers
 INNER JOIN buyers ON sellers.user_id = buyers.user_id
 INNER JOIN users ON sellers.user_id = users.id
 AND sellers.rarity = buyers.rarity`,
-    [res_id.rows[0].id]
-  );
+      [res_id.rows[0].id]
+    );
 
-  await close();
+    await close();
 
-  return res.rows;
+    return res.rows;
+  } catch (error) {
+    console.error("Erreur de chargement des échanges:", error);
+    throw error;
+  }
 }
 
-export async function createNotification(email: string, trade: Trade) {
+export async function createNotification(token: string, trade: Trade) {
+  const email = await verifyGoogleToken(token);
   const { client, close } = await initDatabase();
-  
+
   try {
     const res_sender_id = await client.query<{ id: number }>(
       "select id from users where email =$1",
@@ -173,26 +182,26 @@ export async function createNotification(email: string, trade: Trade) {
        VALUES ($1, $2, $3, $4,'PENDING') RETURNING id`,
       [sender_id, receiver_id, trade.card_to_sell_id, trade.card_to_buy_id]
     );
-    
+
     // Si l'insertion a réussi, renvoyer l'ID
     return { success: true, requestId: req.rows[0]?.id };
-    
   } catch (error) {
     // Vérifier si c'est une erreur de contrainte d'unicité
-    if ((error as { code?: string }).code === '23505') { // Code PostgreSQL pour violation de contrainte unique
-      return { 
-        success: false, 
-        error: 'Une demande d\'échange identique existe déjà',
-        code: 'DUPLICATE_REQUEST'
+    if ((error as { code?: string }).code === "23505") {
+      // Code PostgreSQL pour violation de contrainte unique
+      return {
+        success: false,
+        error: "Une demande d'échange identique existe déjà",
+        code: "DUPLICATE_REQUEST",
       };
     }
-    
+
     // Autres erreurs
     console.error("Erreur lors de la création de la notification:", error);
-    return { 
-      success: false, 
-      error: 'Erreur lors de la création de la notification',
-      code: 'SERVER_ERROR'
+    return {
+      success: false,
+      error: "Erreur lors de la création de la notification",
+      code: "SERVER_ERROR",
     };
   } finally {
     // S'assurer que la connexion est fermée même en cas d'erreur

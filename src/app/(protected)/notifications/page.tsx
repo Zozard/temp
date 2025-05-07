@@ -14,7 +14,7 @@ function Notifications() {
   const [sentNotifs, setSentNotifs] = useState<Notice[] | null>([]);
 
   useEffect(() => {
-    const allNotificationsPromise = loadNotif(user.email);
+    const allNotificationsPromise = loadNotif(user.token);
     allNotificationsPromise.then((notifs) => {
       if (notifs !== null) {
         console.log("Notifications", notifs);
