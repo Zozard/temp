@@ -1,3 +1,5 @@
+"use server"
+
 import { Client } from "pg";
 import { OAuth2Client } from 'google-auth-library';
 
@@ -41,4 +43,23 @@ export async function verifyGoogleToken(token: string): Promise<string> {
     console.error('Erreur de vérification du token:', error);
     throw new Error('Token invalide ou expiré');
   }
+}
+
+export async function verifyAccount(token: string): Promise<void> {
+  const email = await verifyGoogleToken(token);
+  const { client, close } = await initDatabase();
+
+  const res = await client.query<{ id: number }>(
+    "SELECT id FROM users WHERE email = $1",
+    [email]
+  );
+
+  // Si l'utilisateur n'existe pas
+  if (res.rows.length !== 1) {
+    // Création de l'utilisateur si il n'existe pas
+    await client.query(
+      "INSERT INTO users (email) VALUES ($1)",
+      [email]
+    );
+}
 }

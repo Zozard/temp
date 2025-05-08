@@ -1,7 +1,7 @@
 import { Reply, X } from "lucide-react";
 import { useState } from "react";
 import "./ReplyModal.css";
-import { processAnswer } from "@/app/(protected)/notifications/profile";
+import { processAnswer } from "@/app/(protected)/notifications/notifs";
 
 interface ReplyModalProps {
   trade_request: number;

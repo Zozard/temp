@@ -9,6 +9,7 @@ import { useState, useEffect } from "react";
 import { jwtDecode } from "jwt-decode";
 import "./globals.css";
 import homePicture from './assets/home-picture.png';
+import { verifyAccount } from "@/actions/database";
 
 // Interface pour typer les informations utilisateur Google
 interface GoogleUserInfo {
@@ -44,9 +45,9 @@ function Home() {
       const decoded = jwtDecode<GoogleUserInfo>(token);
       setUserInfo(decoded);
     }
+
   }, [token]);
 
-  // J'ai pas réussi à faire autrement qu'en créant une fonction handleLogout :/
   const handleLogout = () => {
     googleLogout();
     if (typeof window !== "undefined") {
@@ -74,11 +75,14 @@ function Home() {
           <GoogleLogin
             onSuccess={(credentialResponse) => {
               console.log(credentialResponse);
+
               setIsLoggedIn(true); // Used to re-render component
               if (credentialResponse.credential !== undefined) {
                 const decoded = jwtDecode<GoogleUserInfo>(
                   credentialResponse.credential
                 );
+                // CredentialResponse.credential is the JWT token
+                verifyAccount(credentialResponse.credential);
                 setUserInfo(decoded);
                 if (typeof window !== "undefined") {
                   window.localStorage.setItem(

@@ -1,10 +1,10 @@
 "use client";
 
-import { loadNotif } from "./profile";
+import { loadNotif } from "./notifs";
 import { useEffect, useState } from "react";
 import { useAuthenticatedUser } from "../hooks/useAuthenticatedUser";
 import { Notice } from "../../types/Notice";
-import "./profile.css";
+import "./notifs.css";
 import dynamic from "next/dynamic";
 import { ReplyModal } from "@/app/(public)/market/components/ReplyModal";
 
@@ -42,8 +42,7 @@ function Notifications() {
           ) : (
             receivedNotifs?.map((notif, index) => (
               <li key={index}>
-                {notif.sender_name}{" "}
-                donne{" "}
+                {notif.sender_name} donne{" "}
                 <span className="notification-card-name">
                   {notif.offered_func_id} - {notif.offered_name}
                 </span>{" "}
@@ -62,7 +61,7 @@ function Notifications() {
                   }
                 >
                   {notif.status}
-                 </button>
+                </button>
                 {notif.status === "PENDING" && (
                   <ReplyModal trade_request={notif.id} />
                 )}

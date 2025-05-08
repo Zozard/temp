@@ -19,6 +19,9 @@ const Navbar = () => {
         <Link href="/notifications" className="nav-link">
           Notifications
         </Link>
+        <Link href="/profile" className="nav-link">
+          Profile
+        </Link>
       </div>
     </nav>
   );
