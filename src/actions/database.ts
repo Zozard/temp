@@ -55,7 +55,7 @@ export async function verifyAccount(token: string): Promise<void> {
   // Si il existe, c'est le on conflict qui s'exécute
 
   await client.query(
-    "INSERT INTO users (email) VALUES ($1) ON CONFLICT DO UPDATE SET last_seen_at = NOW()",
+    "INSERT INTO users (email) VALUES ($1) ON CONFLICT (email) DO UPDATE SET last_seen_at = NOW()",
     [email]
   );
 
