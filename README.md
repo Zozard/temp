@@ -91,7 +91,7 @@ Fonctionnel
   Autres points : 
   -Traduction en anglais
   -Pagination + filtres sur la page Market
-  -Groupes d'amis
+  -Groupes d'amis (réfléchir à une solution avec des uuid générés lors de la création du groupe)
   -Améliorer l'UX 
   -Penser à la version mobile
   -Ajouter Google Analytics 
