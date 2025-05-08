@@ -62,4 +62,7 @@ export async function verifyAccount(token: string): Promise<void> {
       [email]
     );
 }
+
+await close();
+
 }

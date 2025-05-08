@@ -1,19 +1,12 @@
 "use client";
 
-import React, { useState, useEffect, ChangeEvent, FormEvent } from "react";
+import React, { useState, useEffect, ChangeEvent } from "react";
 import "./profile.css";
 import { findUserData, updateUserData, UserData } from "./profile";
 import { useAuthenticatedUser } from "../hooks/useAuthenticatedUser";
 import dynamic from "next/dynamic";
 
-interface User {
-  token: string;
-}
 
-interface MessageState {
-  text: string;
-  type: "success" | "error" | "";
-}
 
 function Profile() {
   const user = useAuthenticatedUser();
@@ -62,6 +55,7 @@ function Profile() {
       updateUserData(user.token, pseudo, friendCode);
       setIsLoading(false);
     } catch (error) {
+      console.error("Erreur de sauvegarde des cartes:", error);
       setIsLoading(false);
     }
   };
@@ -80,7 +74,7 @@ function Profile() {
           className="input-readonly"
           disabled
         />
-        <small>L'email ne peut pas être modifié</small>
+        <small>Email cannot be modified</small>
 
         <label>Pseudo</label>
         <input
