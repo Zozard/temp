@@ -1,21 +1,23 @@
-"use server"
+"use server";
 
 import { Client } from "pg";
-import { OAuth2Client } from 'google-auth-library';
+import { OAuth2Client } from "google-auth-library";
 
 const client = new OAuth2Client();
-const GOOGLE_CLIENT_ID = "505484307039-oo2uoi908rphpg284f683hib1ogi3nfl.apps.googleusercontent.com";
+const GOOGLE_CLIENT_ID =
+  "505484307039-oo2uoi908rphpg284f683hib1ogi3nfl.apps.googleusercontent.com";
 
-
-export async function initDatabase(): Promise<{client: Client, close: () => Promise<void>}> {
+export async function initDatabase(): Promise<{
+  client: Client;
+  close: () => Promise<void>;
+}> {
   const client = new Client({
     connectionString: process.env.POSTGRES_URL,
   });
   await client.connect();
 
-  return {client,close:() => client.end()};
+  return { client, close: () => client.end() };
 }
-
 
 /**
  * Vérifie un token JWT Google et retourne l'email de l'utilisateur
@@ -32,16 +34,16 @@ export async function verifyGoogleToken(token: string): Promise<string> {
     });
 
     const payload = ticket.getPayload();
-    const userEmail = payload?.['email'];
+    const userEmail = payload?.["email"];
 
     if (!userEmail) {
-      throw new Error('Email non trouvé dans le token');
+      throw new Error("Email non trouvé dans le token");
     }
 
     return userEmail;
   } catch (error) {
-    console.error('Erreur de vérification du token:', error);
-    throw new Error('Token invalide ou expiré');
+    console.error("Erreur de vérification du token:", error);
+    throw new Error("Token invalide ou expiré");
   }
 }
 
@@ -49,20 +51,13 @@ export async function verifyAccount(token: string): Promise<void> {
   const email = await verifyGoogleToken(token);
   const { client, close } = await initDatabase();
 
-  const res = await client.query<{ id: number }>(
-    "SELECT id FROM users WHERE email = $1",
+  // Création de l'utilisateur si il n'existe pas
+  // Si il existe, c'est le on conflict qui s'exécute
+
+  await client.query(
+    "INSERT INTO users (email) VALUES ($1) ON CONFLICT DO UPDATE SET last_seen_at = NOW()",
     [email]
   );
 
-  // Si l'utilisateur n'existe pas
-  if (res.rows.length !== 1) {
-    // Création de l'utilisateur si il n'existe pas
-    await client.query(
-      "INSERT INTO users (email) VALUES ($1)",
-      [email]
-    );
-}
-
-await close();
-
+  await close();
 }

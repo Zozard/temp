@@ -109,6 +109,7 @@ export async function loadMyMatches(token: string): Promise<Trade[]> {
       throw new Error("Something Wrong happened!!");
     }
 
+    // TODO : order by avec le last_seen_at pour les partenaires d'échange
     const res = await client.query<Trade>(
       `WITH sellers AS
   (SELECT buyer_cards.card_id,
@@ -144,7 +145,8 @@ SELECT sellers.card_id AS card_to_buy,
 FROM sellers
 INNER JOIN buyers ON sellers.user_id = buyers.user_id
 INNER JOIN users ON sellers.user_id = users.id
-AND sellers.rarity = buyers.rarity`,
+AND sellers.rarity = buyers.rarity
+ORDER BY users.last_seen_at DESC`,
       [res_id.rows[0].id]
     );
 

@@ -70,3 +70,14 @@ CREATE INDEX idx_trade_requests_status ON trade_requests(status);
 CREATE UNIQUE INDEX unique_pending_seen_trade_requests
 ON trade_requests (sender_id, receiver_id, offered_card_id, requested_card_id)
 WHERE status IN ('PENDING', 'SEEN');
+
+-- Cinquième Migration
+
+-- Index d'unicité sur l'email des utilisateurs
+-- Ajout d'une date de dernière connexion 
+
+CREATE UNIQUE INDEX unique_user_email
+ON users (email);
+
+ALTER TABLE users ADD COLUMN last_seen_at TIMESTAMPTZ DEFAULT NOW();
+
