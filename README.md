@@ -79,11 +79,6 @@ Fonctionnel
 
   Liste de points pour que le site soit diffusable à grande échelle : 
   
-  Point critiques: 
-  -Authentification
-  -Corriger les failles d'injection SQL
-  -Mettre en place une création de compte 
-
   Scaling :
   -Trop de connexions simultanées à la DB (https://vercel.com/guides/connection-pooling-with-serverless-functions)
   -Limites du Free Tier de Vercel / Supabase 
@@ -91,35 +86,23 @@ Fonctionnel
 
   Points un peu moins critiques :
   -Ne pas stocker les emails
+  -Trouver un nom de domaine
 
   Autres points : 
   -Traduction en anglais
   -Pagination + filtres sur la page Market
   -Groupes d'amis
-  -Favoriser des échanges avec des gens récents (Maintenir une date de visite à utiliser sur Market)
   -Améliorer l'UX 
   -Penser à la version mobile
+  -Ajouter Google Analytics 
 
-// l'audience est le clientId dans le cas de google auth (voire public/page.tsx)
-// si le payload et l'email sont undefined ça veut dire authentification foirée
-import { OAuth2Client } from 'google-auth-library'
+  --> Pour ne plus stocker les emails proprement 
+  1) créer la 2ème colonne (pour stocker l 'id google)
+  2) à la prochaine connexion, stocker l'id du user dans la nouvelle colonne 
+  3) mettre à jour les fonctions backend pour ne plus utiliser l'email
+  4) quand tout le monde s'est connecté au moins une fois, virer les emails de la db 
 
-const client = new OAuth2Client();
+  OU 
 
-async function verifyToken(audience: string, token: string): Promise<string | undefined> {
-    const ticket = await client.verifyIdToken({
-        idToken: token,
-        audience,
-    });
+  DEMANDER LES TOKEN DES GENS 
 
-    const payload = ticket.getPayload();
-    const userEmail = payload?.['email'];
-
-    return userEmail;
-}
-
-
-// création de compte
-// côté front, on charge le profil d'un gars en donnant le JWT à la fonction backend
-// la fonction quand elle reçoit ça, elle vérifie si un profil existe déjà, si oui elle le renvoie
-// si non, elle le crée puis le renvoit
