@@ -27,7 +27,7 @@ function Notifications() {
         console.log("Sent notifications", sentNotifs);
       }
     });
-  }, []);
+  }, [sentNotifs, user.token]);
 
   return (
     <div className="main-content">

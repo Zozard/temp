@@ -21,7 +21,7 @@ function Groups() {
         setMyGroups(groups);
       }
     });
-  }, [myGroups]);
+  }, [myGroups, user.token]);
 
   const handleNewGroupCreation = () => {
     // Ici, vous pouvez ajouter la logique pour créer un nouveau groupe
@@ -55,7 +55,7 @@ function Groups() {
         <div className="my-groups-container">
           <h2> Mes groupes </h2>
           {myGroups === null ? (
-            <p>Vous n'avez pas de groupe</p>
+            <p>Vous n&apos;avez pas de groupe</p>
           ) : (
             myGroups?.map((group, index) => (
               <li key={index}>

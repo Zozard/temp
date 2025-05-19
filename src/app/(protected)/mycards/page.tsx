@@ -83,7 +83,7 @@ function Page() {
       allCardsPromise.then((cards) => {
         setAllCards(cards);
       });
-  }, []);
+  }, [user.token]);
 
   const toggleRarityFilter = (rarity: string) => {
     setRarityFilter(
