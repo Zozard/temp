@@ -21,7 +21,8 @@ function Groups() {
         setMyGroups(groups);
       }
     });
-  }, [myGroups, user.token]);
+  }, []);
+
 
   const handleNewGroupCreation = () => {
     // Ici, vous pouvez ajouter la logique pour créer un nouveau groupe

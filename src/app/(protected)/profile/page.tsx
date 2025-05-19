@@ -26,7 +26,7 @@ function Profile() {
         setFriendCode(userData.friend_code || "");
       }
     });
-  }, [user.token]);
+  }, []);
 
   const handleFriendCodeChange = (e: ChangeEvent<HTMLInputElement>): void => {
     let value = e.target.value.replace(/[^0-9]/g, ""); // Garder seulement les chiffres
