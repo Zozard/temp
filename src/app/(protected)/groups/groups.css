@@ -1,0 +1,41 @@
+h1 {
+  text-align: center;
+  padding: 10px;
+}
+
+h2 {
+  font-size: 2em;
+  margin: 30px 0;
+}
+
+label {
+  font-size: 1.5em;
+}
+
+.groups-container {
+  margin-left: 50px;
+
+  .create-group-container {
+    label,
+    input,
+    textarea,
+    button {
+      display: block;
+      margin: 5px 0;
+    }
+  }
+
+  button {
+    margin: 10px;
+  }
+
+  input, textarea {
+    padding: 12px;
+    border-radius: 5px;
+  }
+
+  textarea {
+    height: 150px;
+    width: 50%;
+  }
+}

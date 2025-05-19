@@ -32,7 +32,6 @@ CREATE TABLE user_cards
 
 -- Second Migration 
 
--- à venir 
 -- les modifs sur les tables sont à faire avec des alter table 
 -- (au sein de transactions dans l'idéal) 
 
@@ -80,4 +79,34 @@ CREATE UNIQUE INDEX unique_user_email
 ON users (email);
 
 ALTER TABLE users ADD COLUMN last_seen_at TIMESTAMPTZ DEFAULT NOW();
+
+-- Sixième Migration
+
+-- Création de la table des groupes avec UUID et référence vers l'administrateur
+CREATE TABLE groups (
+    id SERIAL PRIMARY KEY,
+    uuid UUID NOT NULL DEFAULT gen_random_uuid(), -- UUID unique pour rejoindre le groupe
+    name VARCHAR(100) NOT NULL,
+    description TEXT,
+    admin_id INT NOT NULL REFERENCES users(id), -- Référence vers l'administrateur unique
+    created_at TIMESTAMP DEFAULT NOW(),
+    
+    -- Contrainte d'unicité sur l'UUID
+    UNIQUE (uuid)
+);
+
+CREATE TABLE user_groups (
+    id SERIAL PRIMARY KEY,
+    user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    group_id INT NOT NULL REFERENCES groups(id) ON DELETE CASCADE,
+    joined_at TIMESTAMP DEFAULT NOW(),
+    
+    -- Contrainte d'unicité pour éviter les doublons
+    UNIQUE (user_id, group_id)
+);
+
+CREATE INDEX idx_user_groups_user_id ON user_groups(user_id);
+CREATE INDEX idx_user_groups_group_id ON user_groups(group_id);
+CREATE INDEX idx_groups_uuid ON groups(uuid); -- Index sur l'UUID pour les recherches rapides
+CREATE INDEX idx_groups_admin ON groups(admin_id); -- Index sur l'administrateur
 

@@ -22,6 +22,9 @@ const Navbar = () => {
         <Link href="/profile" className="nav-link">
           Profile
         </Link>
+        <Link href="/groups" className="nav-link">
+          Groups
+        </Link>
       </div>
     </nav>
   );
