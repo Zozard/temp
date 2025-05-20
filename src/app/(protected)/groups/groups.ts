@@ -56,3 +56,37 @@ export async function createNewGroup(name: string, description: string, token: s
     throw error;
   }
 }
+
+export async function joinGroup(token: string, groupUUID: string) {
+  try {
+    const { client, close } = await initDatabase();
+    const email = await verifyGoogleToken(token);
+
+    // Récupérer l'ID de l'utilisateur à partir de l'email
+    const userId = await client.query(
+      `SELECT id FROM users WHERE email = $1`,
+      [email]
+    );
+
+    const groupId = await client.query(
+      `SELECT id, name, description FROM groups WHERE uuid = $1`,
+      [groupUUID]
+    );
+    
+    if (groupId.rows.length === 0) {
+      throw new Error("Groupe non trouvé");
+    }
+
+    await client.query(
+      `INSERT INTO user_groups (user_id, group_id) VALUES ($1, $2)`,
+      [userId.rows[0].id, groupId.rows[0].id]
+    );
+
+    await close();
+    return groupId.rows[0];
+  }
+  catch (error) {
+    console.error("Erreur d'ajout au groupe:", error);
+    throw error;
+  }
+}

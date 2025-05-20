@@ -5,12 +5,13 @@ import { useAuthenticatedUser } from "../hooks/useAuthenticatedUser";
 import { Group } from "../../types/Group";
 import "./groups.css";
 import dynamic from "next/dynamic";
-import { createNewGroup, loadMyGroups } from "./groups";
+import { createNewGroup, joinGroup, loadMyGroups } from "./groups";
 
 function Groups() {
   const user = useAuthenticatedUser();
   const [newGroupName, setNewGroupName] = useState("");
   const [newGroupDescription, setNewGroupDescription] = useState("");
+  const [groupToJoinUUID, setGroupToJoinUUID] = useState("");
   const [myGroups, setMyGroups] = useState<Group[]>([]);
 
   useEffect(() => {
@@ -49,6 +50,23 @@ function Groups() {
     setNewGroupDescription("");
   };
 
+  const handleJoinGroup = () => {
+    // Ici, vous pouvez ajouter la logique pour rejoindre un groupe
+    console.log("Rejoindre le groupe");
+    const joinedGroupPromise = joinGroup(user.token, groupToJoinUUID)
+    joinedGroupPromise.then((joinedGroup) => {
+            setMyGroups((prevGroups) => [
+        ...(prevGroups || []),
+        {
+          id: joinedGroup.id,
+          name: joinedGroup.name,
+          description: joinedGroup.description,
+        },
+      ]);
+      console.log("Groupe rejoint avec succès");
+    });
+  }
+
   return (
     <>
       <h1>Groups</h1>
@@ -68,8 +86,8 @@ function Groups() {
         <div className="group-join-container">
           <h2>Rejoindre un groupe</h2>
           <label> UUID du groupe à rejoindre : </label>
-          <input type="text" placeholder="UUID" />
-          <button>Rejoindre</button>
+          <input type="text" placeholder="UUID" onChange={(e) => setGroupToJoinUUID(e.target.value)} />
+          <button onClick={handleJoinGroup}>Rejoindre</button>
         </div>
         <div className="create-group-container">
           <h2>Créer un groupe</h2>
