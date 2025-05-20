@@ -6,6 +6,7 @@ import { Group } from "../../types/Group";
 import "./groups.css";
 import dynamic from "next/dynamic";
 import { createNewGroup, joinGroup, loadMyGroups } from "./groups";
+import GroupModal from "./GroupModal";
 
 function Groups() {
   const user = useAuthenticatedUser();
@@ -13,6 +14,10 @@ function Groups() {
   const [newGroupDescription, setNewGroupDescription] = useState("");
   const [groupToJoinUUID, setGroupToJoinUUID] = useState("");
   const [myGroups, setMyGroups] = useState<Group[]>([]);
+
+    // États pour la modale
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedGroup, setSelectedGroup] = useState<Group | null>(null);
 
   useEffect(() => {
     const allGroupsPromise = loadMyGroups(user.token);
@@ -67,6 +72,19 @@ function Groups() {
     });
   }
 
+
+    // Fonction pour ouvrir la modale avec le groupe sélectionné
+  const openGroupModal = (group: Group) => {
+    setSelectedGroup(group);
+    setIsModalOpen(true);
+  };
+
+  // Fonction pour fermer la modale
+  const closeGroupModal = () => {
+    setIsModalOpen(false);
+    setSelectedGroup(null);
+  };
+
   return (
     <>
       <h1>Groups</h1>
@@ -78,7 +96,13 @@ function Groups() {
           ) : (
             myGroups?.map((group, index) => (
               <li key={index}>
-                {group.name} - {group.description}
+                <span 
+                  className="group-name" 
+                  onClick={() => openGroupModal(group)}
+                >
+                  {group.name}
+                </span> 
+                <span className="group-description"> - {group.description}</span>
               </li>
             ))
           )}
@@ -111,6 +135,15 @@ function Groups() {
           <button onClick={handleNewGroupCreation}>Créer</button>
         </div>
       </div>
+            {/* Modale du groupe */}
+      {isModalOpen && selectedGroup && (
+        <GroupModal 
+          group={selectedGroup} 
+          onClose={closeGroupModal} 
+          isOpen={isModalOpen}
+          userToken={user.token}
+        />
+      )}
     </>
   );
 }

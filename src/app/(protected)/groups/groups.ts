@@ -1,7 +1,7 @@
 "use server";
 
 import { initDatabase, verifyGoogleToken } from "@/actions/database";
-import { Group } from "../../types/Group";
+import { Group, User } from "../../types/Group";
 
 export async function loadMyGroups(token: string): Promise<Group[]> {
   try {
@@ -87,6 +87,54 @@ export async function joinGroup(token: string, groupUUID: string) {
   }
   catch (error) {
     console.error("Erreur d'ajout au groupe:", error);
+    throw error;
+  }
+}
+
+export async function groupListOfUsers(groupId: number): Promise<User[]> {
+    try {
+    // Est-ce qu'il faudrait pas vérifier que ce User est bien dans le groupe ?
+    // const email = await verifyGoogleToken(token);
+    const { client, close } = await initDatabase();
+
+    const res = await client.query<User>(
+      `SELECT u.id, u.pseudo  
+      FROM user_groups ug
+      JOIN users u ON u.id = ug.user_id
+      WHERE ug.group_id = $1`,
+      [groupId]
+    );
+
+    await close();
+
+    return res.rows;
+
+  } catch (error) {
+    console.error("Erreur de chargement de la liste des utilisateurs:", error);
+    throw error;
+  }
+};
+
+export async function groupAdmin(groupId: number): Promise<User> {
+    try {
+    // Est-ce qu'il faudrait pas vérifier que ce User est bien dans le groupe ?
+    // const email = await verifyGoogleToken(token);
+    const { client, close } = await initDatabase();
+
+    const res = await client.query<User>(
+      `SELECT u.id, u.pseudo  
+      FROM groups g
+      JOIN users u ON u.id = g.admin_id
+      WHERE g.id = $1`,
+      [groupId]
+    );
+
+    await close();
+
+    return res.rows[0];
+
+  } catch (error) {
+    console.error("Erreur de chargement de l'administrateur du groupe:", error);
     throw error;
   }
 }

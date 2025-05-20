@@ -15,6 +15,18 @@ label {
 .groups-container {
   margin-left: 50px;
 
+  .group-name {
+    font-size: 1.3em;
+    font-weight: bold;
+    color:#3b82f6;
+    margin: 10px 0;
+    cursor: pointer;
+  }
+
+  .group-name:hover {
+  text-decoration: underline;
+}
+
   .create-group-container {
     label,
     input,

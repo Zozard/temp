@@ -3,3 +3,8 @@ export type Group = {
   name: string;
   description: string;
 };
+
+export type User = {
+  id: string;
+  pseudo: string;
+}
