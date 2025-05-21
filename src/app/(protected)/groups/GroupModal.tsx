@@ -8,9 +8,10 @@ interface GroupModalProps {
   onClose: () => void;
   isOpen: boolean;
   userToken: string;
+  onGroupDelete: () => void;
 }
 
-const GroupModal = ({ group, onClose, isOpen, userToken }: GroupModalProps) => {
+const GroupModal = ({ group, onClose, isOpen, userToken, onGroupDelete }: GroupModalProps) => {
   const [users, setUsers] = useState<User[]>([]);
   const [admin, setAdmin] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -66,6 +67,7 @@ const GroupModal = ({ group, onClose, isOpen, userToken }: GroupModalProps) => {
       const success = await removeGroup(group.id, userToken);
       if (success) {
         console.log("Groupe supprimé:", groupId);
+        onGroupDelete(); // Appeler la fonction de suppression du groupe
         onClose(); // Fermer la modale après la suppression
       }
     } catch (error) {

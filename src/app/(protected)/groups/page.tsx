@@ -144,6 +144,11 @@ function Groups() {
           onClose={closeGroupModal} 
           isOpen={isModalOpen}
           userToken={user.token}
+          onGroupDelete={() => {
+            setMyGroups((prevGroups) =>
+              prevGroups?.filter((group) => group.id !== selectedGroup.id) || []
+            );
+          }}
         />
       )}
     </>
