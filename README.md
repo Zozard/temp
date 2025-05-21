@@ -106,3 +106,15 @@ Fonctionnel
 
   DEMANDER LES TOKEN DES GENS 
 
+
+### 2025-05-21 
+
+Evolutions
+-Pagination sur la page market
+-Gérer le timeout du token (quand t'es déconnecté, t'es renvoyé sur la homepage (=login)) --> ou voir si c'est possible de refresh le token périodiquement (à voir avec la lib google auth comment ça marche)
+-Nettoyer un peu le CSS (notamment au niveau de la pollution entre les pages)
+
+Corrections
+- Pop-up de confirmation dans la suppression de groupes
+- Pop-up de confirmation dans la suppression des users des groupes
+- Rajouter un loading sur la page market lors du filtre de groupes 

@@ -94,7 +94,7 @@ export function findMatches(buyerEmail: string, offers: Offer[]): MatchingOffer[
 
 //
 
-export async function loadMyMatches(token: string): Promise<Trade[]> {
+export async function loadMyMatches(token: string, selectedGroups: number[] | null): Promise<Trade[]> {
   try {
     // Vérifier le token Google et récupérer l'email
     const email = await verifyGoogleToken(token);
@@ -145,9 +145,11 @@ SELECT sellers.card_id AS card_to_buy,
 FROM sellers
 INNER JOIN buyers ON sellers.user_id = buyers.user_id
 INNER JOIN users ON sellers.user_id = users.id
+LEFT JOIN user_groups ON users.id = user_groups.user_id
 AND sellers.rarity = buyers.rarity
+WHERE ($2::integer[] IS NULL OR user_groups.group_id = ANY($2::integer[]))
 ORDER BY users.last_seen_at DESC`,
-      [res_id.rows[0].id]
+      [res_id.rows[0].id, selectedGroups]
     );
 
     await close();

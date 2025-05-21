@@ -11,6 +11,9 @@ import { NotificationModal } from "./components/NotificationModal";
 import { loadMyGroups } from "@/app/(protected)/groups/groups";
 import { Group } from "@/app/types/Group";
 
+// variable dégoutante pour palier le fait que ça marchait pas avec le useState
+let lastTradePromise: Promise<Trade[]> | null = null;
+
 function Market() {
   const [trades, setTrades] = useState<Trade[]>([]);
   const user = useAuthenticatedUser();
@@ -18,11 +21,21 @@ function Market() {
   const [allGroups, setAllGroups] = useState<Group[]>([]);
   const [groupFilter, setGroupFilter] = useState<number[]>([]);
 
-  useEffect(() => {
-    const allTradesPromise = loadMyMatches(user.token);
-    allTradesPromise.then((trades) => setTrades(trades));
-    console.log(trades);
 
+  useEffect(() => {
+    const localTradesPromise = loadMyMatches(user.token, groupFilter.length === 0 ? null : groupFilter);
+    // grâce à lastTradePromise on s'assure que le code sous le if ne s'exécute que si on est dans le cas de la dernière promesse envoyée 
+    lastTradePromise = localTradesPromise;
+    localTradesPromise.then((trades) => {
+      if (localTradesPromise !== lastTradePromise) {
+        return;
+      }
+      setTrades(trades);
+    });
+    console.log(trades);
+  }, [user, refreshCounter, groupFilter]);
+
+  useEffect(() => {
     const allGroupsPromise = loadMyGroups(user.token);
     allGroupsPromise.then((groups) => {
       if (groups !== null) {
@@ -30,7 +43,7 @@ function Market() {
         setAllGroups(groups);
       }
     });
-  }, [user, refreshCounter]);
+  }, [user]);
 
   const handleCancelTrade = async (token: string, card_id: string) => {
     try {
