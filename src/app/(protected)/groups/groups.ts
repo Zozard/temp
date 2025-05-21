@@ -138,3 +138,103 @@ export async function groupAdmin(groupId: number): Promise<User> {
     throw error;
   }
 }
+
+export async function isAdmin(token: string, groupId: number): Promise<boolean> {
+  try {
+    const { client, close } = await initDatabase();
+    const email = await verifyGoogleToken(token);
+
+    // Récupérer l'ID de l'utilisateur à partir de l'email
+    const userId = await client.query(
+      `SELECT id FROM users WHERE email = $1`,
+      [email]
+    );
+
+    const res = await client.query(
+      `SELECT COUNT(*) > 0 AS is_admin
+      FROM groups g
+      JOIN users u ON u.id = g.admin_id
+      WHERE g.id = $1 AND u.id = $2`,
+      [groupId, userId.rows[0].id]
+    );
+
+    await close();
+    return res.rows[0].is_admin;
+
+  } catch (error) {
+    console.error("Erreur de vérification de l'administrateur:", error);
+    throw error;
+  }
+}
+
+export async function removeFromGroup(userId: string, groupId: number, token: string): Promise<boolean> {
+  try {
+    const { client, close } = await initDatabase();
+    const email = await verifyGoogleToken(token);
+
+    // Vérifier si l'utilisateur est admin du groupe
+    const isAdmin = await client.query(
+      `SELECT COUNT(*) > 0 AS is_admin
+      FROM groups g
+      JOIN users u ON u.id = g.admin_id
+      WHERE g.id = $1 AND u.email = $2`,
+      [groupId, email]
+    );
+
+    if (!isAdmin.rows[0].is_admin) {
+      throw new Error("L'utilisateur n'est pas administrateur du groupe");
+    }
+
+    // Supprimer l'utilisateur du groupe
+    await client.query(
+      `DELETE FROM user_groups WHERE user_id = $1 AND group_id = $2`,
+      [userId, groupId]
+    );
+
+    await close();
+    return true;
+
+  } catch (error) {
+    console.error("Erreur de suppression de l'utilisateur du groupe:", error);
+    throw error;
+  }
+}
+
+export async function removeGroup(groupId: number, token: string): Promise<boolean> {
+  try {
+    const { client, close } = await initDatabase();
+    const email = await verifyGoogleToken(token);
+
+    // Vérifier si l'utilisateur est admin du groupe
+    const isAdmin = await client.query(
+      `SELECT COUNT(*) > 0 AS is_admin
+      FROM groups g
+      JOIN users u ON u.id = g.admin_id
+      WHERE g.id = $1 AND u.email = $2`,
+      [groupId, email]
+    );
+
+    if (!isAdmin.rows[0].is_admin) {
+      throw new Error("L'utilisateur n'est pas administrateur du groupe");
+    }
+
+    // Supprimer tous les user_groups associés au groupe
+    await client.query(
+      `DELETE FROM user_groups WHERE group_id = $1`,
+      [groupId]
+    );
+
+    // Supprimer le groupe
+    await client.query(
+      `DELETE FROM groups WHERE id = $1`,
+      [groupId]
+    );
+
+    await close();
+    return true;
+
+  } catch (error) {
+    console.error("Erreur de suppression du groupe:", error);
+    throw error;
+  }
+}

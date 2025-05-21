@@ -69,14 +69,8 @@
 
 .group-members li {
   padding: 8px 0;
-  border-bottom: 1px solid #eee;
   display: flex;
-  justify-content: space-between;
   align-items: center;
-}
-
-.group-members li:last-child {
-  border-bottom: none;
 }
 
 .remove-user {

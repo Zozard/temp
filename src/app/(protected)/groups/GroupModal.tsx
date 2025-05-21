@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Group, User } from "../../types/Group";
 import "./groupModal.css";
-import { groupAdmin, groupListOfUsers } from "./groups";
+import { groupAdmin, groupListOfUsers, isAdmin, removeFromGroup, removeGroup } from "./groups";
 
 interface GroupModalProps {
   group: Group;
@@ -14,6 +14,7 @@ const GroupModal = ({ group, onClose, isOpen, userToken }: GroupModalProps) => {
   const [users, setUsers] = useState<User[]>([]);
   const [admin, setAdmin] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isCurrentUserAdmin, setIsCurrentUserAdmin] = useState(false);
 
   useEffect(() => {
     if (isOpen && group) {
@@ -22,13 +23,17 @@ const GroupModal = ({ group, onClose, isOpen, userToken }: GroupModalProps) => {
       // Charger les utilisateurs du groupe
       const fetchUsers = async () => {
         try {
-          const [usersData, adminData] = await Promise.all([
+          const [usersData, adminData, adminStatus]: [User[], User | null, boolean] = await Promise.all([
             groupListOfUsers(group.id),
-            groupAdmin(group.id)
+            groupAdmin(group.id),
+            isAdmin(userToken, group.id)
           ]);
           
           setUsers(usersData);
           setAdmin(adminData);
+          setIsCurrentUserAdmin(adminStatus);
+          console.log("isAdmin", adminStatus);
+          console.log("Liste des utilisateurs du groupe:", usersData);
         } catch (error) {
           console.error("Erreur lors du chargement des données du groupe:", error);
         } finally {
@@ -39,6 +44,33 @@ const GroupModal = ({ group, onClose, isOpen, userToken }: GroupModalProps) => {
       fetchUsers();
     }
   }, [group, isOpen, userToken]);
+
+    const handleRemoveUser = async (userId: string) => {
+    if (!isCurrentUserAdmin) return;
+    
+    try {
+      const success = await removeFromGroup(userId, group.id, userToken);
+      if (success) {
+        // Mise à jour locale de la liste des utilisateurs
+        setUsers(prevUsers => prevUsers.filter(user => user.id !== userId));
+      }
+    } catch (error) {
+      console.error("Erreur lors de la suppression de l'utilisateur:", error);
+    }
+  };
+
+  const handleRemoveGroup = async (groupId: number) => {
+    if (!isCurrentUserAdmin) return;
+
+    try {
+      const success = await removeGroup(group.id, userToken);
+      console.log("Groupe supprimé:", groupId);
+      onClose(); // Fermer la modale après la suppression
+    } catch (error) {
+      console.error("Erreur lors de la suppression du groupe:", error);
+    }
+  };
+
 
   if (!isOpen) return null;
 
@@ -74,11 +106,29 @@ const GroupModal = ({ group, onClose, isOpen, userToken }: GroupModalProps) => {
             ) : users.length > 0 ? (
               <ul>
                 {users.map(user => (
-                  <li key={user.id}>{user.pseudo}</li>
+                  <li key={user.id}>
+                    {user.pseudo}
+                    {isCurrentUserAdmin && user.id !== admin?.id && (
+                      <span 
+                        className="remove-user" 
+                        onClick={() => handleRemoveUser(user.id)}
+                        title="Supprimer cet utilisateur du groupe"
+                      >
+                        ×
+                      </span>
+                    )}
+                  </li>
                 ))}
               </ul>
             ) : (
               <p>Aucun membre dans ce groupe</p>
+            )}
+          </div>
+          <div className="group-remove">
+            {isCurrentUserAdmin && (
+              <button className="remove-group-button" onClick={() => handleRemoveGroup(group.id)}>
+                Supprimer le groupe
+              </button>
             )}
           </div>
         </div>
