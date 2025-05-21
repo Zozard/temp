@@ -4,6 +4,41 @@ h1 {
   font-size: 48px;
 }
 
+    .group-selector {
+        display: flex;
+        align-items: baseline;
+        align-self: center;
+        justify-content: center;
+        gap: 20px;
+        margin: 10px 0;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        background-color: white;
+
+
+        button {
+            padding: 7px 10px;
+            max-height: 40px;
+        }
+    }
+
+    .toggle-button-group {
+        user-select: none;
+    }
+    
+    .toggle-button-group.saving {
+        background-color: #ccc;
+        cursor: not-allowed;
+        position: relative;
+      }
+
+    .toggle-button-group.active {
+        background-color: blue;
+        color: white;
+      }
+
+
 .market {
   display: grid;
   grid-template-columns: repeat(6, 1fr);

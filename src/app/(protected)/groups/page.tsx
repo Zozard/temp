@@ -15,6 +15,7 @@ function Groups() {
   const [groupToJoinUUID, setGroupToJoinUUID] = useState("");
   const [myGroups, setMyGroups] = useState<Group[]>([]);
 
+
   console.log("User", user);
 
     // États pour la modale
