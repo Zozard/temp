@@ -64,8 +64,10 @@ const GroupModal = ({ group, onClose, isOpen, userToken }: GroupModalProps) => {
 
     try {
       const success = await removeGroup(group.id, userToken);
-      console.log("Groupe supprimé:", groupId);
-      onClose(); // Fermer la modale après la suppression
+      if (success) {
+        console.log("Groupe supprimé:", groupId);
+        onClose(); // Fermer la modale après la suppression
+      }
     } catch (error) {
       console.error("Erreur lors de la suppression du groupe:", error);
     }
